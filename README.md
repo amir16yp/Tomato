@@ -10,3 +10,4 @@ currently i have implemented:
 - shooting projectiles
 - a dialogue box for interacting with things by pressing F
 - healthbars for both enemies and the player (or any other entity i will add in the future)
+[tomato-demo.webm](https://github.com/amir16yp/Tomato/assets/96111605/9035ef4e-d241-47a1-b8af-54c175922234)
