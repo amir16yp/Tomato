@@ -1,5 +1,8 @@
 package game.ui;
 
+import game.Game;
+import game.Screen;
+
 import java.util.List;
 
 public class StartMenu extends Menu
@@ -17,10 +20,34 @@ public class StartMenu extends Menu
 
         List<Button> buttons = getButtons();
 
-        buttons.add(new Button(startX, startY, buttonWidth, buttonHeight, "Resume"));
-        buttons.add(new Button(startX, startY + spacing, buttonWidth, buttonHeight, "Options"));
-        buttons.add(new Button(startX, startY + spacing * 2, buttonWidth, buttonHeight, "Exit"));
-        buttons.add(new Button(startX, startY + spacing * 3, buttonWidth, buttonHeight, "View log"));
+        Button playButton = new Button(startX, startY, buttonWidth, buttonHeight, "Resume");
+        Button optionsButton = new Button(startX, startY + spacing, buttonWidth, buttonHeight, "Options");
+        Button exitButton = new Button(startX, startY + spacing * 2, buttonWidth, buttonHeight, "Exit");
+        Button viewLogButton = new Button(startX, startY + spacing * 3, buttonWidth, buttonHeight, "View log");
+
+        playButton.setOnSelectedAction(() -> {
+            Screen.isPaused = false;
+        });
+
+
+        optionsButton.setOnSelectedAction(() -> {
+            Screen.setCurrentMenu(1);
+        });
+
+
+        exitButton.setOnSelectedAction(() -> {
+            Game.instance.dispose();
+        });
+
+        viewLogButton.setOnSelectedAction(() -> {
+            LogWindow logWindow = new LogWindow();
+            logWindow.setVisible(true);
+        });
+
+        buttons.add(playButton);
+        buttons.add(optionsButton);
+        buttons.add(exitButton);
+        buttons.add(viewLogButton);
 
         buttons.get(selectedButtonIndex).setSelected(true); // Highlight the first button
     }

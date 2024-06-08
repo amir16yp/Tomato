@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-import game.ui.Button;
-import game.ui.LogWindow;
+import game.ui.Menu;
+import game.ui.OptionsMenu;
 import game.ui.StartMenu;
 
 public class Screen extends JPanel {
@@ -17,16 +18,34 @@ public class Screen extends JPanel {
     private static Scene currentScene = SCENES[0];
     private static final int TARGET_FRAME_TIME = 30;
     public static Logger logger = new Logger("Screen");
-    private static boolean isPaused = true;
-    private StartMenu startMenu;
-
+    public static boolean isPaused = true;
+    public static Menu[] menus = new Menu[]
+            {
+                    new StartMenu(0, 0, 800, 600),
+                    new OptionsMenu(0, 0, 800, 600)
+            };
+    public static Menu currentMenu;
     public Screen() {
         setFocusable(true);
         requestFocusInWindow();
         setupKeyListener();
-        setupStartMenu();
+        currentMenu = menus[0];
+        for (Menu menu : menus)
+        {
+            this.addMouseListener(menu);
+            this.addMouseMotionListener(menu);
+        }
         startGameLoop();
     }
+
+    public static void setCurrentMenu(int index)
+    {
+        currentMenu.setVisible(false);
+        currentMenu = menus[index];
+        currentMenu.setVisible(true);
+    }
+
+
 
     public void dispose() {
         for (Scene scene : SCENES)
@@ -34,36 +53,6 @@ public class Screen extends JPanel {
             scene.dispose();
         }
     }
-
-    private void setupStartMenu()
-    {
-        startMenu = new StartMenu(0, 0, 800, 600);
-        Button btn1 = startMenu.getButtons().get(0);
-        Button btn2 = startMenu.getButtons().get(1);
-        Button btn3 = startMenu.getButtons().get(2);
-        Button btn4 = startMenu.getButtons().get(3);
-        btn1.setOnSelectedAction(() -> {
-            isPaused = false;
-        });
-
-        btn2.setOnSelectedAction(() -> {
-
-        });
-
-
-        btn3.setOnSelectedAction(() -> {
-            Game.instance.dispose();
-        });
-
-        btn4.setOnSelectedAction(() -> {
-            LogWindow logWindow = new LogWindow();
-            logWindow.setVisible(true);
-        });
-
-        this.addMouseListener(startMenu);
-        this.addMouseMotionListener(startMenu);
-    }
-
 
     public static Scene getCurrentScene()
     {
@@ -95,9 +84,9 @@ public class Screen extends JPanel {
                 super.keyPressed(e);
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     isPaused = !isPaused;
-                    startMenu.setVisible(isPaused); // Show/hide start menu with pause state
+                    currentMenu.setVisible(isPaused); // Show/hide start menu with pause state
                 } else{
-                    startMenu.keyPressed(e.getKeyCode());
+                    currentMenu.keyPressed(e.getKeyCode());
                 }
             }
         };
@@ -124,7 +113,7 @@ public class Screen extends JPanel {
         if (!isPaused) {
             currentScene.draw(g);
         } else {
-            startMenu.draw(g); // Draw the start menu
+            currentMenu.draw(g); // Draw the start menu
         }
     }
 

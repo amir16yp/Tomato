@@ -1,5 +1,7 @@
 package game.ui;
 
+import game.Logger;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -27,7 +29,7 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
     }
 
     public void initializeButtons() {
-
+        this.logger.Log("Initalizing buttons");
     }
 
     public void setVisible(boolean visible)
