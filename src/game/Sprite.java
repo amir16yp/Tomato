@@ -134,14 +134,8 @@ public class Sprite {
         return flippedImage;
     }
 
-    /*
-    public boolean isInSolidTile() {
-        // Calculate the tile indices based on the sprite's current position
-        int tileX = this.x / Screen.tiles.getWidth();
-        int tileY = this.y / Screen.tiles.getHeight();
+    public void dispose()
+    {
 
-        // Use the Screen's static tiles instance to check if the tile is solid
-        return Screen.tiles.isTileSolid(tileX, tileY);
     }
-     */
 }

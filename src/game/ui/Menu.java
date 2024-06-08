@@ -30,6 +30,14 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     }
 
+    public void setVisible(boolean visible)
+    {
+        for (Button button : this.getButtons())
+        {
+            button.setVisible(visible);
+        }
+    }
+
     public void keyPressed(int keyCode) {
         // Update selected button based on key press
         switch (keyCode) {

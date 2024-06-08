@@ -29,7 +29,7 @@ public class Button extends UIElement {
     }
 
     public void onOptionSelected() {
-        if (onSelectedAction != null) {
+        if (onSelectedAction != null && this.isVisible()) {
             onSelectedAction.run();
         }
     }

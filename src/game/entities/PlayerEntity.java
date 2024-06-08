@@ -8,6 +8,8 @@ import game.ui.DialogueBox;
 import java.awt.event.KeyEvent;
 
 public class PlayerEntity extends Entity {
+
+    public static Direction playerDirection;
     public Sprite projectileSprite = new Sprite("sprites/player/bullet.png", 8, 8, 100);
 
     public PlayerEntity() {
@@ -20,6 +22,14 @@ public class PlayerEntity extends Entity {
         this.setMoveSpeed(3);
     }
 
+    public Direction getCurrentDirection()
+    {
+        if (playerDirection == null)
+        {
+            playerDirection = Direction.getRandomDirection();
+        }
+        return playerDirection;
+    }
 
     public void update() {
         super.update();
@@ -77,6 +87,10 @@ public class PlayerEntity extends Entity {
 
     }
 
+    public void move(Direction direction, boolean unPause) {
+        super.move(direction, unPause);
+        playerDirection = direction;
+    }
     public void stopPlayerMoving() {
         stopMoving();
         updateMoveSprite();

@@ -11,6 +11,7 @@ public class EnemyEntity extends Entity {
     private double damageAmount = 10.0;
     public EnemyEntity(String name) {
         super(name);
+        currentDirection = Direction.getRandomDirection();
     }
 
     public double getDamageAmount() {

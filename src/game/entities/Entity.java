@@ -27,14 +27,13 @@ public class Entity {
     private Sprite currentSprite;
     private int x; // Current x-coordinate of the entity
     private int y; // Current y-coordinate of the entity
-    private Direction currentDirection;
     private long lastShotTime = 0;
+    public Direction currentDirection;
     public Logger logger = new Logger(this.getClass().getName());
     public Entity(String name) {
         logger.addPrefix(name);
         this.name = name;
         sprites = new HashMap<>();
-        currentDirection = Direction.getRandomDirection();
         hitbox = new Rectangle(getCurrentX(), getCurrentY(), 32, 32);
         healthBar = new HealthBar(100, 20, 5);
         logger.Log("Created entity");
@@ -279,5 +278,11 @@ public class Entity {
             return true;
         }
         return false;
+    }
+
+    public void dispose()
+    {
+        logger.Log("Disposing entity");
+        shotProjectiles.clear();
     }
 }

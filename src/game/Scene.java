@@ -97,4 +97,23 @@ public class Scene {
         }
     }
 
+    public void disposeEntities(List<Entity> entities)
+    {
+        for (Entity entity : entities)
+        {
+            entity.dispose();
+        }
+    }
+
+    public void dispose()
+    {
+        logger.Log("Disposing scene resources");
+        disposeEntities(entityList);
+        entityList.clear();
+        boundaries.clear();
+        uiElements.clear();
+        currentTiles.dispose();
+        playerEntity.dispose();
+    }
+
 }

@@ -2,6 +2,8 @@ package game;
 
 import game.ui.LogWindow;
 
+import java.util.Arrays;
+
 public class Logger
 {
     private String className;
@@ -29,5 +31,10 @@ public class Logger
         String o = this.className + this.prefix + " [ERROR] " + msg;
         System.out.println(o);
         LogWindow.appendLog(o);
+    }
+
+    public void Error(Exception err)
+    {
+        String o = this.className + this.prefix + " [ERROR]\n" + Arrays.toString(err.getStackTrace());
     }
 }

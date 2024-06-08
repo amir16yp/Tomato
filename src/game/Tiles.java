@@ -28,7 +28,6 @@ public class Tiles {
         loadTilesFromCSV(levelCSV);
     }
 
-
     private void loadTilesIDFromCSV(String csvPath) {
         logger.Log("Loading tile IDs from CSV " + csvPath);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(csvPath))))) {
@@ -128,5 +127,14 @@ public class Tiles {
 
     public int getColumnCount() {
         return columnCount;
+    }
+    public void dispose() {
+        logger.Log("Disposing tiles resources");
+        for (Sprite tileSprite : tileMap.values()) {
+            tileSprite.dispose();
+        }
+        tileMap.clear();
+        tileSolidMap.clear();
+        tileDoorTo.clear();
     }
 }

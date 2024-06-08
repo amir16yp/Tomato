@@ -28,6 +28,13 @@ public class Screen extends JPanel {
         startGameLoop();
     }
 
+    public void dispose() {
+        for (Scene scene : SCENES)
+        {
+            scene.dispose();
+        }
+    }
+
     private void setupStartMenu()
     {
         startMenu = new StartMenu(0, 0, 800, 600);
