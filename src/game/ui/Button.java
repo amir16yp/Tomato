@@ -67,6 +67,4 @@ public class Button extends UIElement {
         int y = getY() + (getHeight() - stringHeight) / 2 + g.getFontMetrics().getAscent();
         g.drawString(text, x, y);
     }
-
-    // Additional functionality like onClick can be added here
 }

@@ -1,6 +1,7 @@
 package game.entities.other;
 
 import game.Direction;
+import game.Game;
 import game.Screen;
 import game.Sprite;
 import game.entities.Entity;
@@ -50,8 +51,7 @@ public class Projectile {
         y += getDirection().getDeltaY() * speed;
 
         // Check for collisions or if the projectile goes out of bounds
-        // For simplicity, assuming screen bounds as 800x600
-        if (x < 0 || x > 800 || y < 0 || y > 600) {
+        if (x < 0 || x > Game.WIDTH || y < 0 || y > Game.HEIGHT) {
             deactivate();
         }
 

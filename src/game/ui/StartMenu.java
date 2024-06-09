@@ -1,6 +1,7 @@
 package game.ui;
 
 import game.Game;
+import game.Logger;
 import game.Screen;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class StartMenu extends Menu
         Button viewLogButton = new Button(startX, startY + spacing * 3, buttonWidth, buttonHeight, "View log");
 
         playButton.setOnSelectedAction(() -> {
-            Screen.isPaused = false;
+            Screen.setPaused(false);
         });
 
 
@@ -40,8 +41,7 @@ public class StartMenu extends Menu
         });
 
         viewLogButton.setOnSelectedAction(() -> {
-            LogWindow logWindow = new LogWindow();
-            logWindow.setVisible(true);
+            Logger.logWindow.setVisible(true);
         });
 
         buttons.add(playButton);

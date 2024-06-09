@@ -11,7 +11,9 @@ public class PlayerEntity extends Entity {
 
     public static Direction playerDirection;
     public Sprite projectileSprite = new Sprite("sprites/player/bullet.png", 8, 8, 100);
-
+    public static DialogueBox actionDialogue;
+    private boolean isInDialogue = false;
+    private final double interactionRange = 5.0;
     public PlayerEntity() {
         super("Player");
         this.addSprite("north", new Sprite("sprites/player/walk_north.png", 32, 32, 50));
@@ -39,20 +41,28 @@ public class PlayerEntity extends Entity {
             case Direction.LEFT -> setCurrentSprite("west");
             case Direction.RIGHT -> setCurrentSprite("east");
         }
+        if (actionDialogue != null)
+        {
+            updateDialogueState();
+        }
     }
 
 
     public void updatePosition() {
+        if (isInDialogue) { return ;}
         super.updatePosition();
         int levelID = currerntTile.doorToLevel;
         if (levelID >= 0) {
             Screen.setCurrentScene(levelID);
+
             this.setPosition(Screen.getCurrentScene().getSpawnX(), Screen.getCurrentScene().getSpawnY());
         }
     }
 
     public void handleKeyPressed(int keyCode) {
         //KeyEvent.getKeyText(keyCode);
+        if (isInDialogue) { return ;}
+        actionDialogue = (DialogueBox) Screen.getCurrentScene().uiElements.get(0);
         switch (keyCode) {
             case KeyEvent.VK_W:
                 move(Direction.UP, true);
@@ -76,18 +86,36 @@ public class PlayerEntity extends Entity {
                 Screen.getCurrentScene().spawnEntity(new Zombie(), 50, 50);
                 break;
             case KeyEvent.VK_F:
-                DialogueBox actionDialogue = (DialogueBox) Screen.getCurrentScene().uiElements.get(0);
-                if (this.isFacingWall())
-                {
+                if (this.isFacingWall()) {
                     actionDialogue.setMessage("It's a wall.");
                 } else {
-                    actionDialogue.setMessage("Nothing interesting here.");
+                    for (Entity entity : Screen.getCurrentScene().entityList)
+                    {
+                        if (entity instanceof NPC npc)
+                        {
+                            double distance = distanceTo(entity);
+                            if (distance < (npc.distanceToTalk))
+                            {
+                                actionDialogue.setMessage(npc.interaction());
+                                if (npc.hp != 0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    ///actionDialogue.setMessage("Nothing interesting here.");
                 }
+                break;
+            case KeyEvent.VK_Z:
+                Screen.getCurrentScene().spawnEntity(new John(), this.getCurrentX(), this.getCurrentY());
+                break;
         }
 
     }
 
     public void move(Direction direction, boolean unPause) {
+        if (isInDialogue) { return;}
         super.move(direction, unPause);
         playerDirection = direction;
     }
@@ -95,6 +123,16 @@ public class PlayerEntity extends Entity {
         stopMoving();
         updateMoveSprite();
         pauseAllAnimationByindex(0);
+    }
+
+    public void setInDialogue(boolean inDialogue)
+    {
+        this.isInDialogue = inDialogue;
+    }
+
+    public void updateDialogueState()
+    {
+        setInDialogue(actionDialogue.isVisible());
     }
 
     public void handleKeyReleased(int keyCode) {

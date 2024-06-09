@@ -7,7 +7,7 @@ import java.util.List;
 public class OptionsMenu extends Menu{
 
     public static boolean SHOW_FPS = false;
-    public static boolean SHOW_STATS = false;
+    public static boolean SHOW_STATS = true;
 
     public OptionsMenu(int x, int y, int width, int height) {
         super(x, y, width, height);

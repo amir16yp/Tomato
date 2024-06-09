@@ -1,8 +1,14 @@
 package game.ui;
 
+import game.dialogue.DialogueNode;
+import game.dialogue.DialogueOption;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.List;
 
 public class DialogueBox extends UIElement {
     private final Color boxColor;
@@ -15,9 +21,14 @@ public class DialogueBox extends UIElement {
     private boolean stayVisibleAfterTyping; // Whether the message stays visible after typing
     private long visibilityDelay; // Delay before the message goes invisible after typing
     private long typingFinishedTime = 0; // Time when typing finished
+    private List<DialogueOption> options;
+    private int selectedOptionIndex = 0;
+    private boolean showOptions = false;
+    private DialogueOption quitOption = new DialogueOption("Goodbye.", new DialogueNode("Goodbye!"));
+
 
     public DialogueBox(Color boxColor, Color textColor, Font font, long charDelay, boolean stayVisibleAfterTyping, long visibilityDelay) {
-        super(20, 480, 760, 100, false);
+        super(20, 330, 760, 300, false); // Adjust the height to 300
         this.boxColor = boxColor;
         this.textColor = textColor;
         this.font = font;
@@ -29,14 +40,31 @@ public class DialogueBox extends UIElement {
         this.visibilityDelay = visibilityDelay;
     }
 
-    public void setMessage(String message)
-    {
+    public void setMessage(String message) {
         logger.Log("Set message: " + message);
         this.message = message;
         this.currentLength = 0;
         this.lastCharTime = System.currentTimeMillis();
         this.typingFinishedTime = 0; // Reset typing finished time
+        this.showOptions = false;
+        this.stayVisibleAfterTyping = false;
         setVisible(true); // Make sure the box is visible when setting a new message
+    }
+
+    public void setMessage(DialogueNode node) {
+        this.message = node.getMessage();
+        this.options = node.getOptions();
+        logger.Log(String.format("set message \"%s\" with options:\n%s", message, String.join("\nOption: ", node.getOptionsStrings())));
+        this.selectedOptionIndex = 0;
+        this.currentLength = 0;
+        this.lastCharTime = System.currentTimeMillis();
+        this.showOptions = true;
+        this.stayVisibleAfterTyping = true;
+        if (!options.contains(quitOption))
+        {
+            options.add(quitOption);
+        }
+        setVisible(true);
     }
 
     public void update() {
@@ -51,12 +79,16 @@ public class DialogueBox extends UIElement {
         } else if (typingFinishedTime == 0) { // Typing just finished
             typingFinishedTime = currentTime; // Record the time typing finished
         }
+        currentLength = Math.min(currentLength, message.length());
 
         // Handle visibility after typing is complete and delay is specified
         if (!stayVisibleAfterTyping && typingFinishedTime > 0 && currentTime - typingFinishedTime > visibilityDelay) {
             setVisible(false); // Make the dialogue box invisible
         }
+
+
     }
+
     @Override
     public void draw(Graphics g) {
         super.draw(g);
@@ -82,6 +114,22 @@ public class DialogueBox extends UIElement {
             g.drawString(line, startX, startY);
             startY += lineHeight; // Move to the next line's position
         }
+
+        // Draw options if showOptions is true
+        if (showOptions) {
+            int optionX = startX;
+            int optionY = startY + 10; // Spacing between message and options
+            for (int i = 0; i < options.size(); i++) {
+                DialogueOption option = options.get(i);
+                if (i == selectedOptionIndex) {
+                    g.setColor(Color.YELLOW); // Highlight selected option
+                } else {
+                    g.setColor(textColor);
+                }
+                g.drawString(option.getText(), optionX, optionY);
+                optionY += lineHeight; // Spacing between options
+            }
+        }
     }
 
 
@@ -89,4 +137,25 @@ public class DialogueBox extends UIElement {
         this.textColor = textColor;
     }
 
+    public void hanndleKeyPressed(int key) {
+        if (showOptions) {
+            if (key == KeyEvent.VK_UP) {
+                selectedOptionIndex = Math.max(0, selectedOptionIndex - 1);
+            } else if (key == KeyEvent.VK_DOWN) {
+                selectedOptionIndex = Math.min(options.size() - 1, selectedOptionIndex + 1);
+            } else if (key == KeyEvent.VK_ENTER) {
+                // Handle selection based on the selected option index
+                if (selectedOptionIndex >= 0 && selectedOptionIndex < options.size()) {
+                    DialogueOption selectedOption = options.get(selectedOptionIndex);
+                    // Do something with the selected option
+
+                    this.setMessage(selectedOption.getNextNode());
+                    if (selectedOption == quitOption)
+                    {
+                        setVisible(false);
+                    }
+                }
+            }
+        }
+    }
 }

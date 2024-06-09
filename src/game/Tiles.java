@@ -45,8 +45,8 @@ public class Tiles {
                 tileSolidMap.put(tileID, isSolid);
                 tileDoorTo.put(tileID, doorToLevel);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.Error(e);
         }
     }
 
@@ -70,8 +70,8 @@ public class Tiles {
             rowCount = row;
             tiles = loadedTiles.toArray(Tile[]::new);
             logger.Log(String.format("Loaded tiles %d Rows, %d Columns", rowCount, columnCount));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.Error(e);
         }
     }
 
@@ -81,7 +81,7 @@ public class Tiles {
             tileSprite.draw(g, x, y);
         } else {
             // Handle missing tile (e.g., draw a placeholder or log a warning)
-            System.err.println("Missing tile with ID: " + tileID);
+            logger.Error("Missing tile with ID: " + tileID);
         }
     }
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialogue>
+    <message>Hi, I'm John. What can I help you with?</message>
+    <options>
+        <option>
+            <text>Ask about the weather</text>
+            <nextNode>
+                <message>It's a beautiful day outside!</message>
+                <options>
+                    <option>
+                        <text>Thank John</text>
+                        <nextNode>
+                            <message>You're welcome!</message>
+                        </nextNode>
+                    </option>
+                </options>
+            </nextNode>
+        </option>
+        <option>
+            <text>Ask about John's hobbies</text>
+            <nextNode>
+                <message>I love hiking and reading books.</message>
+                <options>
+                    <option>
+                        <text>Ask about favorite book</text>
+                        <nextNode>
+                            <message>My favorite book is "Harry Potter" by J.K rowling</message>
+                        </nextNode>
+                    </option>
+                    <option>
+                        <text>Ask about favorite hiking spot</text>
+                        <nextNode>
+                            <message>I enjoy hiking in the nearby mountains.</message>
+                        </nextNode>
+                    </option>
+                </options>
+            </nextNode>
+        </option>
+    </options>
+</dialogue>

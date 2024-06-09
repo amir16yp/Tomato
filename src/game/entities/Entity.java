@@ -36,6 +36,7 @@ public class Entity {
         sprites = new HashMap<>();
         hitbox = new Rectangle(getCurrentX(), getCurrentY(), 32, 32);
         healthBar = new HealthBar(100, 20, 5);
+        currentDirection = Direction.getRandomDirection();
         logger.Log("Created entity");
     }
 
@@ -266,10 +267,18 @@ public class Entity {
         this.moveSpeed = moveSpeed;
     }
 
+    public double distanceTo(Entity otherEntity) {
+        double dx = otherEntity.getCurrentX() - this.getCurrentX();
+        double dy = otherEntity.getCurrentY() - this.getCurrentY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+
     public void die()
     {
 
     }
+
     public boolean takeDamage(double amount){
         this.hp -= amount;
         if (this.hp < 0.0) {

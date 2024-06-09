@@ -6,9 +6,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import game.ui.DialogueBox;
 import game.ui.Menu;
 import game.ui.OptionsMenu;
 import game.ui.StartMenu;
+
+import static game.Utils.runtime;
 
 public class Screen extends JPanel {
     private static final Scene[] SCENES = {
@@ -19,10 +22,17 @@ public class Screen extends JPanel {
     private static final int TARGET_FRAME_TIME = 30;
     public static Logger logger = new Logger("Screen");
     public static boolean isPaused = true;
+
+    public static void setPaused(boolean paused)
+    {
+        logger.Log("Set paused " + paused);
+        isPaused = paused;
+    }
+
     public static Menu[] menus = new Menu[]
             {
-                    new StartMenu(0, 0, 800, 600),
-                    new OptionsMenu(0, 0, 800, 600)
+                    new StartMenu(0, 0, Game.WIDTH, Game.HEIGHT),
+                    new OptionsMenu(0, 0, Game.WIDTH, Game.HEIGHT)
             };
     public static Menu currentMenu;
     public Screen() {
@@ -65,6 +75,7 @@ public class Screen extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (!isPaused) {
                     currentScene.playerEntity.handleKeyPressed(e.getKeyCode());
+                    ((DialogueBox) currentScene.uiElements.get(0)).hanndleKeyPressed(e.getKeyCode());
                 }
             }
 
@@ -83,10 +94,13 @@ public class Screen extends JPanel {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    isPaused = !isPaused;
+                    setPaused(!isPaused);
                     currentMenu.setVisible(isPaused); // Show/hide start menu with pause state
                 } else{
-                    currentMenu.keyPressed(e.getKeyCode());
+                    if (isPaused)
+                    {
+                        currentMenu.keyPressed(e.getKeyCode());
+                    }
                 }
             }
         };
@@ -107,6 +121,7 @@ public class Screen extends JPanel {
 
     }
 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -114,6 +129,15 @@ public class Screen extends JPanel {
             currentScene.draw(g);
         } else {
             currentMenu.draw(g); // Draw the start menu
+        }
+        if (OptionsMenu.SHOW_STATS)
+        {
+            long totalMemory = runtime.totalMemory();
+            long freeMemory = runtime.freeMemory();
+            long usedMemory = totalMemory - freeMemory;
+            g.setColor(Color.YELLOW);
+            g.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Set monospaced font properties
+            g.drawString("Used memory: " +  Utils.humanReadableByteCount(usedMemory), 10, 20);
         }
     }
 

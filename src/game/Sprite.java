@@ -18,14 +18,15 @@ public class Sprite {
     private int y;
     private final int width;
     private final int height;
-
+    private Logger logger = new Logger(this.getClass().getName());
     public Sprite(String path, int tileWidth, int tileHeight, int animationInterval) {
+        logger.addPrefix(path);
         this.animationInterval = animationInterval;
         BufferedImage spriteSheet = null;
         try {
             spriteSheet = ImageIO.read(Objects.requireNonNull(this.getClass().getResource(path)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.Error(e);
         }
 
         // Calculate the number of frames based on image width and desired tile width
