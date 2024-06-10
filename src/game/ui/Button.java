@@ -1,10 +1,13 @@
 package game.ui;
 
+import game.Game;
+import game.Screen;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-public class Button extends UIElement {
+public class    Button extends UIElement {
     private String text;
     private final Font font;
     private final Color textColor;
@@ -29,7 +32,7 @@ public class Button extends UIElement {
     }
 
     public void onOptionSelected() {
-        if (onSelectedAction != null && this.isVisible()) {
+        if (onSelectedAction != null && this.isVisible() && Screen.isPaused) {
             onSelectedAction.run();
         }
     }

@@ -6,10 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import game.ui.DialogueBox;
+import game.ui.*;
 import game.ui.Menu;
-import game.ui.OptionsMenu;
-import game.ui.StartMenu;
 
 import static game.Utils.runtime;
 
@@ -25,8 +23,11 @@ public class Screen extends JPanel {
 
     public static void setPaused(boolean paused)
     {
-        logger.Log("Set paused " + paused);
-        isPaused = paused;
+        if (paused != isPaused)
+        {
+            logger.Log("Set paused " + paused);
+            isPaused = paused;
+        }
     }
 
     public static Menu[] menus = new Menu[]

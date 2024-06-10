@@ -27,7 +27,6 @@ public class Entity {
     private Sprite currentSprite;
     private int x; // Current x-coordinate of the entity
     private int y; // Current y-coordinate of the entity
-    private long lastShotTime = 0;
     public Direction currentDirection;
     public Logger logger = new Logger(this.getClass().getName());
     public Entity(String name) {
@@ -37,7 +36,6 @@ public class Entity {
         hitbox = new Rectangle(getCurrentX(), getCurrentY(), 32, 32);
         healthBar = new HealthBar(100, 20, 5);
         currentDirection = Direction.getRandomDirection();
-        logger.Log("Created entity");
     }
 
 
@@ -121,20 +119,15 @@ public class Entity {
 
     public void shootProjectile(Sprite projectileSprite, int speed, int damage) {
         // Ensure we have a direction before shooting
-        if (currentDirection == null || !canShoot || !isTimeToShoot()) return;
+        if (currentDirection == null || !canShoot) return;
 
         // Create a new projectile
         Projectile newProjectile = new Projectile(x, y, currentDirection, speed, projectileSprite, damage, this);
 
         // Add the new projectile to the list of projectiles
         shotProjectiles.add(newProjectile);
-        lastShotTime = System.currentTimeMillis();
     }
 
-    private boolean isTimeToShoot() {
-        long currentTime = System.currentTimeMillis();
-        return (currentTime - lastShotTime) >= shotDelay;
-    }
 
     public void pauseAllAnimationByindex(int index) {
         for (Sprite sprite : sprites.values()) {
@@ -276,17 +269,15 @@ public class Entity {
 
     public void die()
     {
-
+        logger.Log("Entity has died");
     }
 
-    public boolean takeDamage(double amount){
+    public void takeDamage(double amount){
         this.hp -= amount;
-        if (this.hp < 0.0) {
+        if (this.hp <= 0.0) {
             this.hp = 0;
             die();
-            return true;
         }
-        return false;
     }
 
     public void dispose()

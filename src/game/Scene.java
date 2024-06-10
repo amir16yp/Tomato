@@ -1,8 +1,9 @@
 package game;
 
 import game.entities.Entity;
-import game.entities.PlayerEntity;
+import game.entities.player.PlayerEntity;
 import game.ui.DialogueBox;
+import game.ui.Hotbar;
 import game.ui.UIElement;
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class Scene {
     }
 
     public void spawnEntity(Entity entity, int x, int y) {
+        logger.Log(String.format("Spawnining %s at %d,%d", entity.getClass().getName(), x, y));
         entity.setPosition(x, y);
         entityList.add(entity);
     }
@@ -58,6 +60,7 @@ public class Scene {
         logger.Log("initializing");
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
+        this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
         this.currentTiles = new Tiles(tileIdPath, tilePath);
         playerEntity.setPosition(spawnX, spawnY);
         this.entityList.add(playerEntity);

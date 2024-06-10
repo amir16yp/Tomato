@@ -1,6 +1,9 @@
 package game;
 
-public class Utils {
+import game.entities.player.PlayerEntity;
+
+public class Utils
+{
     public static Runtime runtime = Runtime.getRuntime();
     private static final long KB = 1024;
     private static final long MB = KB * KB;
