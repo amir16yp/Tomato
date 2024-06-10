@@ -11,6 +11,6 @@ public class Gun extends Item{
     @Override
     public void use() {
         super.use();
-        Screen.getCurrentScene().playerEntity.shootGun();
+        Screen.getCurrentScene().playerEntity.shootGun( );
     }
 }

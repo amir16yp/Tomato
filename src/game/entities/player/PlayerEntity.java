@@ -20,7 +20,7 @@ public class PlayerEntity extends Entity {
     private boolean isInDialogue = false;
     private int ammo = 30;
     private final double interactionRange = 5.0;
-    private static final Item[] starterItems = new Item[9];
+    private static final Item[] starterItems = new Item[10];
     static {
         starterItems[0] = new Gun();
         starterItems[1] = new Sword();
