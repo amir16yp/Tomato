@@ -53,7 +53,7 @@ public class Hotbar extends UIElement {
             int centerY = slotY + SLOT_SIZE / 2;
 
             // Draw slot background
-            g.setColor(Color.GRAY);
+            g.setColor(new Color(128, 128, 128,128));
             g.fillRect(slotX, slotY, SLOT_SIZE, SLOT_SIZE);
 
             // Draw item sprite
