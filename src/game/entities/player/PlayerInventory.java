@@ -1,5 +1,6 @@
 package game.entities.player;
 
+import game.Logger;
 import game.ui.Hotbar;
 
 public class PlayerInventory
@@ -7,13 +8,18 @@ public class PlayerInventory
     private final Hotbar hotbarUI = new Hotbar((800 - (10 * 50 + 9 * 5)) / 2, 0, 800, 50, true);
     private Item[] items;
     private Item currentItem;
+    private Logger logger = new Logger(this.getClass().getName());
     public PlayerInventory(Item[] items)
     {
+        logger.Log("Init inventory");
         this.items = items;
         int slot = 0;
         for (Item item : items)
         {
-            hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
+            if (item != null)
+            {
+                hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
+            }
             slot++;
         }
         currentItem = items[0];
@@ -34,10 +40,14 @@ public class PlayerInventory
         int slot = 0;
         for (Item item : items)
         {
-            if (item.getUses() < item.getMaxUsages() && item == getCurrentItem() && System.currentTimeMillis() - item.lastUsedTime >= item.cooldownTime) { // Check if there are any uses left
-                item.use();
-                hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
+            if (item != null)
+            {
+                if (item.getUses() < item.getMaxUsages() && item == getCurrentItem() && System.currentTimeMillis() - item.lastUsedTime >= item.cooldownTime) { // Check if there are any uses left
+                    item.use();
+                    hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
+                }
             }
+
             slot++;
         }
     }

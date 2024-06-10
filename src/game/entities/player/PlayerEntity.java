@@ -8,6 +8,7 @@ import game.entities.John;
 import game.entities.NPC;
 import game.entities.enemy.Zombie;
 import game.ui.DialogueBox;
+import org.ietf.jgss.GSSName;
 
 import java.awt.event.KeyEvent;
 
@@ -19,12 +20,12 @@ public class PlayerEntity extends Entity {
     private boolean isInDialogue = false;
     private int ammo = 30;
     private final double interactionRange = 5.0;
-    public static PlayerInventory inventory = new PlayerInventory(
-      new Item[]{
-              new Gun(),
-              new Sword()
-      }
-    );
+    private static final Item[] starterItems = new Item[9];
+    static {
+        starterItems[0] = new Gun();
+        starterItems[1] = new Sword();
+    }
+    public static PlayerInventory inventory = new PlayerInventory(starterItems);
     public PlayerEntity() {
         super("Player");
         this.addSprite("north", new Sprite("sprites/player/walk_north.png", 32, 32, 50));
@@ -110,8 +111,24 @@ public class PlayerEntity extends Entity {
             case KeyEvent.VK_5:
                 inventory.selectItem(4);
                 break;
+            case KeyEvent.VK_6:
+                inventory.selectItem(5);
+                break;
+            case KeyEvent.VK_7:
+                inventory.selectItem(6);
+                break;
+            case KeyEvent.VK_8:
+                inventory.selectItem(7);
+                break;
+            case KeyEvent.VK_9:
+                inventory.selectItem(8);
+                break;
+            case KeyEvent.VK_0:
+                inventory.selectItem(9);
+                break;
             case KeyEvent.VK_R:
                 Screen.getCurrentScene().reset();
+                inventory = new PlayerInventory(starterItems);
                 break;
             case KeyEvent.VK_X:
                 Screen.getCurrentScene().spawnEntity(new Zombie(), 50, 50);
