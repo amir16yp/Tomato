@@ -7,10 +7,11 @@ import game.entities.Entity;
 import game.entities.John;
 import game.entities.NPC;
 import game.entities.enemy.Zombie;
+import game.items.*;
 import game.ui.DialogueBox;
-import org.ietf.jgss.GSSName;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class PlayerEntity extends Entity {
 
@@ -18,9 +19,7 @@ public class PlayerEntity extends Entity {
     public Sprite projectileSprite = new Sprite("sprites/player/bullet.png", 8, 8, 100);
     public static DialogueBox actionDialogue;
     private boolean isInDialogue = false;
-    private int ammo = 30;
-    private final double interactionRange = 5.0;
-    private static final Item[] starterItems = new Item[10];
+    public static final Item[] starterItems = new Item[10];
     static {
         starterItems[0] = new Gun();
         starterItems[1] = new Sword();
@@ -66,14 +65,13 @@ public class PlayerEntity extends Entity {
         int levelID = currerntTile.doorToLevel;
         if (levelID >= 0) {
             Screen.setCurrentScene(levelID);
-
             this.setPosition(Screen.getCurrentScene().getSpawnX(), Screen.getCurrentScene().getSpawnY());
         }
     }
 
     public void shootGun()
     {
-        shootProjectile(projectileSprite, 10, 50);
+        shootProjectile(projectileSprite, 10, 25    );
     }
 
     public void handleKeyPressed(int keyCode) {
@@ -156,7 +154,7 @@ public class PlayerEntity extends Entity {
                 }
                 break;
             case KeyEvent.VK_Z:
-                Screen.getCurrentScene().spawnEntity(new John(), this.getCurrentX(), this.getCurrentY());
+                Screen.getCurrentScene().spawnItem(new DoorKey(new Random().nextInt(0, 1)), 50, 50);
                 break;
         }
 

@@ -2,9 +2,14 @@ package game;
 
 import game.entities.Entity;
 import game.entities.player.PlayerEntity;
+import game.entities.player.PlayerInventory;
+import game.items.Item;
+import game.items.PickupItem;
 import game.ui.DialogueBox;
 import game.ui.Hotbar;
 import game.ui.UIElement;
+
+import javax.script.ScriptEngine;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +18,9 @@ public class Scene {
     private Logger logger = new Logger(this.getClass().getName());
     public Tiles currentTiles;
     public java.util.List<Entity> entityList = new ArrayList<Entity>();
+    public List<PickupItem> pickupItemList = new ArrayList<>();
     public PlayerEntity playerEntity = new PlayerEntity();
     public List<Rectangle> boundaries = new ArrayList<Rectangle>();
-
     public List<UIElement> uiElements = new ArrayList<>();
     private final String tileIdPath;
     private final String tilePath;
@@ -36,9 +41,12 @@ public class Scene {
         logger.Log("resetting scene");
         currentTiles = null;
         entityList = new ArrayList<Entity>();
+        pickupItemList = new ArrayList<PickupItem>();
         playerEntity = new PlayerEntity();
+        PlayerInventory.clearItemHistory();
+        PlayerEntity.inventory.resetUses();
         boundaries = new ArrayList<Rectangle>();
-        uiElements = new ArrayList<>();
+        uiElements = new ArrayList<UIElement>();
         init();
     }
 
@@ -55,6 +63,14 @@ public class Scene {
         entity.setPosition(x, y);
         entityList.add(entity);
     }
+
+    public void spawnItem(Item item, int x, int y)
+    {
+        PickupItem pickupItem = (PickupItem)item;
+        pickupItem.setCoordinate(x, y);
+        pickupItemList.add(pickupItem);
+    }
+
 
     private void init() {
         logger.Log("initializing");
@@ -84,6 +100,17 @@ public class Scene {
         for (Entity entity : entityList) {
             entity.update();
         }
+        List<PickupItem> itemsToRemove = new ArrayList<>();
+        for (PickupItem item : pickupItemList)
+        {
+            item.update();
+            if (playerEntity.isCollidingWith(item))
+            {
+                PlayerEntity.inventory.addItem(item);
+                itemsToRemove.add(item);
+            }
+        }
+        pickupItemList.removeAll(itemsToRemove);
     }
 
     public void draw(Graphics g) {
@@ -97,6 +124,11 @@ public class Scene {
         }
         for (Entity entity : entityList) {
             entity.draw(g);
+        }
+
+        for (PickupItem item : pickupItemList)
+        {
+            item.draw(g);
         }
     }
 
@@ -112,6 +144,7 @@ public class Scene {
     {
         logger.Log("Disposing scene resources");
         disposeEntities(entityList);
+        pickupItemList.clear();
         entityList.clear();
         boundaries.clear();
         uiElements.clear();

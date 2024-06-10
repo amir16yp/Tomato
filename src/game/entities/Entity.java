@@ -3,6 +3,7 @@ package game.entities;
 import game.*;
 import game.entities.other.HealthBar;
 import game.entities.other.Projectile;
+import game.items.PickupItem;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -233,6 +234,18 @@ public class Entity {
         this.x = x;
         this.y = y;
 
+    }
+
+    public boolean isCollidingWith(Entity otherEntity) {
+        Rectangle playerBounds = new Rectangle(getCurrentX(), getCurrentY(), this.currentSprite.getWidth(), this.currentSprite.getHeight());
+        Rectangle otherBounds = new Rectangle(otherEntity.getCurrentX(), otherEntity.getCurrentY(), otherEntity.currentSprite.getWidth(), otherEntity.currentSprite.getHeight());
+        return playerBounds.intersects(otherBounds);
+    }
+
+    public boolean isCollidingWith(PickupItem pickupItem) {
+        Rectangle playerBounds = new Rectangle(getCurrentX(), getCurrentY(), this.currentSprite.getWidth(), this.currentSprite.getHeight());
+        Rectangle otherBounds = new Rectangle(pickupItem.getX(), pickupItem.getY(), pickupItem.getSprite().getWidth(), pickupItem.getSprite().getHeight());
+        return playerBounds.intersects(otherBounds);
     }
 
     public String getName() {

@@ -1,14 +1,15 @@
-package game.entities.player;
+package game.items;
 
 import game.Screen;
 import game.Sprite;
 import game.entities.Entity;
 import game.entities.enemy.EnemyEntity;
+import game.entities.player.PlayerEntity;
 
-public class Sword extends Item
+public class Sword extends PickupItem
 {
     public Sword() {
-        super(new Sprite("/game/sprites/items/sword.png", 32, 32    , 1000), 999, 750);
+        super(new Sprite("/game/sprites/items/sword.png", 32, 32, 1000), 999, 750);
     }
 
     @Override

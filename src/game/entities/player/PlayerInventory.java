@@ -2,7 +2,11 @@ package game.entities.player;
 
 import game.Game;
 import game.Logger;
+import game.items.Item;
 import game.ui.Hotbar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerInventory
 {
@@ -10,7 +14,7 @@ public class PlayerInventory
     private Item[] items;
     private Item currentItem;
     private Logger logger = new Logger(this.getClass().getName());
-
+    private static List<Item> itemHistory = new ArrayList<>();
     public PlayerInventory(Item[] items)
     {
         logger.Log("Init player inventory");
@@ -30,6 +34,7 @@ public class PlayerInventory
             {
                 logItemsString.append(item.getClass().getName());
                 hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
+                itemHistory.add(item);
             } else {
                 logItemsString.append("Empty");
             }
@@ -70,27 +75,39 @@ public class PlayerInventory
         return currentItem;
     }
 
-    public void setItemAtIndex(Item item, int index)
+    public void addItem(Item item) {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == null) { // Find the first empty slot in the inventory
+                items[i] = item; // Add the item to the empty slot
+                hotbarUI.setItemSprite(i, item.getSprite(), item.getMaxUsages() - item.getUses()); // Update the hotbar UI
+                logger.Log("Added " + item.getClass().getName() + " to inventory at slot " + i);
+                return; // Exit the loop after adding the item
+            }
+        }
+        logger.Log("Inventory is full. Cannot add item: " + item.getClass().getName());
+    }
+
+    public Hotbar getHotbarUI() {
+        return hotbarUI;
+    }
+
+    public static void clearItemHistory()
     {
-        try {
-            this.items[index] = item;
-        } catch (Exception e)
+        itemHistory.clear();
+    }
+
+    public void resetUses()
+    {
+        for (Item item : this.items)
         {
-            logger.Error(e);
+            if (item != null)
+            {
+                item.setUses(0);
+            }
         }
     }
 
-    public Item getItemAtIndex(int index)
-    {
-        try {
-            return items[index];
-        } catch (Exception e)
-        {
-            logger.Error(e);
-        }
-        return null;
-    }
-    public Hotbar getHotbarUI() {
-        return hotbarUI;
+    public static List<Item> getItemHistory() {
+        return itemHistory;
     }
 }

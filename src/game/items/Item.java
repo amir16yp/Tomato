@@ -1,7 +1,5 @@
-package game.entities.player;
+package game.items;
 
-import game.Scene;
-import game.Screen;
 import game.Sprite;
 
 public class Item
@@ -32,6 +30,10 @@ public class Item
 
     public int getUses() {
         return uses;
+    }
+
+    public void setUses(int uses) {
+        this.uses = uses;
     }
 
     public int getMaxUsages() {
