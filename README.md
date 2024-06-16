@@ -12,6 +12,8 @@ currently i have implemented:
 - a dialogue box for interacting with the world and entities
 - healthbars for both entities and the player
 - keybind registry
+- basic hotbar inventory
+- items
 - a modding interface ([see example mod](https://github.com/amir16yp/Tomato-ExampleMod))
 
 
