@@ -32,7 +32,7 @@ public class StartMenu extends Menu
 
 
         optionsButton.setOnSelectedAction(() -> {
-            Screen.setCurrentMenu(1);
+            Screen.setCurrentMenu(Screen.menus[1]);
         });
 
 

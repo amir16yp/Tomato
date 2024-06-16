@@ -2,7 +2,6 @@ package game;
 
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.*;
@@ -17,13 +16,15 @@ public class Tiles {
     private int tileHeight = 32;
     private int rowCount;
     private int columnCount = 0;
+    private ResourceLoader resourceLoader;
     private Logger logger = new Logger(this.getClass().getName());
 
-    public Tiles(String idCSV, String levelCSV) {
+    public Tiles(String idCSV, String levelCSV, ResourceLoader resourceLoader) {
         logger.addPrefix(levelCSV);
         tileMap = new HashMap<>();
         tileSolidMap = new HashMap<>();
         tileDoorTo = new HashMap<>();
+        this.resourceLoader = resourceLoader;
         loadTilesIDFromCSV(idCSV);
         loadTilesFromCSV(levelCSV);
     }
@@ -41,7 +42,7 @@ public class Tiles {
                 boolean isSolid = Boolean.parseBoolean(parts[3]);
                 int doorToLevel = Integer.parseInt(parts[4]);
                 logger.Log("TileID: " + tileID + ", SpritePath: " + spritePath + ", AnimationInterval: " + animationInterval + ", IsSolid: " + isSolid + ", DoorToLevel: " + doorToLevel);
-                tileMap.put(tileID, new Sprite(spritePath, tileWidth, tileHeight, animationInterval));
+                tileMap.put(tileID, new Sprite(spritePath, tileWidth, tileHeight, animationInterval,  this.resourceLoader));
                 tileSolidMap.put(tileID, isSolid);
                 tileDoorTo.put(tileID, doorToLevel);
             }

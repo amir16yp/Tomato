@@ -6,6 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import game.entities.player.PlayerEntity;
+import game.input.KeybindRegistry;
 import game.ui.*;
 import game.ui.Menu;
 
@@ -20,7 +22,6 @@ public class Screen extends JPanel {
     private static final int TARGET_FRAME_TIME = 30;
     public static Logger logger = new Logger("Screen");
     public static boolean isPaused = true;
-
     public static void setPaused(boolean paused)
     {
         if (paused != isPaused)
@@ -35,7 +36,8 @@ public class Screen extends JPanel {
                     new StartMenu(0, 0, Game.WIDTH, Game.HEIGHT),
                     new OptionsMenu(0, 0, Game.WIDTH, Game.HEIGHT)
             };
-    public static Menu currentMenu;
+    public static java.util.List<Menu> modMenus = new ArrayList<Menu>();
+    public static Menu currentMenu = menus[0];
     public Screen() {
         setFocusable(true);
         requestFocusInWindow();
@@ -46,13 +48,18 @@ public class Screen extends JPanel {
             this.addMouseListener(menu);
             this.addMouseMotionListener(menu);
         }
+        for (Menu menu : modMenus)
+        {
+            this.addMouseListener(menu);
+            this.addMouseMotionListener(menu);
+        }
         startGameLoop();
     }
 
-    public static void setCurrentMenu(int index)
+    public static void setCurrentMenu(Menu menu)
     {
         currentMenu.setVisible(false);
-        currentMenu = menus[index];
+        currentMenu = menu;
         currentMenu.setVisible(true);
     }
 
@@ -71,41 +78,28 @@ public class Screen extends JPanel {
     }
 
     private void setupKeyListener() {
-        KeyAdapter playerKeyAdapter = new KeyAdapter() {
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_ESCAPE, () -> {
+            setPaused(!isPaused);
+            currentMenu.setVisible(isPaused);
+        });
+
+        PlayerEntity.registerKeybinds();
+        Menu.registerKeybinds();
+        DialogueBox.registerKeybinds();
+
+        KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (!isPaused) {
-                    currentScene.playerEntity.handleKeyPressed(e.getKeyCode());
-                    ((DialogueBox) currentScene.uiElements.get(0)).hanndleKeyPressed(e.getKeyCode());
-                }
+                KeybindRegistry.registry.handleKeyPress(e.getKeyCode());
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (!isPaused)
-                {
-                    currentScene.playerEntity.handleKeyReleased(e.getKeyCode());
-                }
+                KeybindRegistry.registry.handleKeyRelease(e.getKeyCode());
             }
         };
-        addKeyListener(playerKeyAdapter);
+        addKeyListener(keyAdapter);
 
-        KeyAdapter menuKeyAdapter = new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    setPaused(!isPaused);
-                    currentMenu.setVisible(isPaused); // Show/hide start menu with pause state
-                } else{
-                    if (isPaused)
-                    {
-                        currentMenu.keyPressed(e.getKeyCode());
-                    }
-                }
-            }
-        };
-        addKeyListener(menuKeyAdapter);
 
     }
 
@@ -117,6 +111,10 @@ public class Screen extends JPanel {
         if (!isPaused)
         {
             currentScene.update();
+        }
+        for (Mod mod : ModLoader.mods)
+        {
+            mod.update();
         }
         repaint();
 
@@ -139,6 +137,10 @@ public class Screen extends JPanel {
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Set monospaced font properties
             g.drawString("Used memory: " +  Utils.humanReadableByteCount(usedMemory), 10, 20);
+        }
+        for (Mod mod : ModLoader.mods)
+        {
+            mod.draw(g);
         }
     }
 

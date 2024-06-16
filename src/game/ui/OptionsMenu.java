@@ -37,7 +37,7 @@ public class OptionsMenu extends Menu{
 
         Button backButton = new Button(startX, startY + spacing * 2, buttonWidth, buttonHeight, "Back");
         backButton.setOnSelectedAction(() -> {
-            Screen.setCurrentMenu(0);
+            Screen.setCurrentMenu(Screen.menus[0]);
         });
 
         buttons.add(toggleFps);

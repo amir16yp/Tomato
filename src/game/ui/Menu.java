@@ -1,12 +1,15 @@
 package game.ui;
 
 import game.Logger;
+import game.Screen;
+import game.input.KeybindRegistry;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,24 +43,37 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
         }
     }
 
-    public void keyPressed(int keyCode) {
-        // Update selected button based on key press
-        switch (keyCode) {
-            case KeyEvent.VK_UP:
-                buttons.get(selectedButtonIndex).setSelected(false);
-                selectedButtonIndex = (selectedButtonIndex - 1 + buttons.size()) % buttons.size();
-                buttons.get(selectedButtonIndex).setSelected(true);
-                break;
-            case KeyEvent.VK_DOWN:
-                buttons.get(selectedButtonIndex).setSelected(false);
-                selectedButtonIndex = (selectedButtonIndex + 1) % buttons.size();
-                buttons.get(selectedButtonIndex).setSelected(true);
-                break;
-            case KeyEvent.VK_ENTER:
-                selectOption();
-                break;
-        }
+    public static void registerKeybinds()
+    {
+        boolean visible = Screen.currentMenu.isVisible() && Screen.isPaused;
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_UP, () -> {
+            if (visible)
+            {
+                Screen.currentMenu.Up();
+            }
+        });
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_DOWN, () -> {
+            if (visible)
+            {
+                Screen.currentMenu.Down();
+            }
+        });
     }
+
+    public void Up()
+    {
+        buttons.get(selectedButtonIndex).setSelected(false);
+        selectedButtonIndex = (selectedButtonIndex - 1 + buttons.size()) % buttons.size();
+        buttons.get(selectedButtonIndex).setSelected(true);
+    }
+
+    public void Down()
+    {
+        buttons.get(selectedButtonIndex).setSelected(false);
+        selectedButtonIndex = (selectedButtonIndex + 1) % buttons.size();
+        buttons.get(selectedButtonIndex).setSelected(true);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         for (Button button : buttons) {

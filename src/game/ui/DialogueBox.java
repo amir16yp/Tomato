@@ -2,12 +2,15 @@ package game.ui;
 
 import game.dialogue.DialogueNode;
 import game.dialogue.DialogueOption;
+import game.entities.player.PlayerEntity;
+import game.input.KeybindRegistry;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 import java.util.List;
 
 public class DialogueBox extends UIElement {
@@ -21,10 +24,10 @@ public class DialogueBox extends UIElement {
     private boolean stayVisibleAfterTyping; // Whether the message stays visible after typing
     private long visibilityDelay; // Delay before the message goes invisible after typing
     private long typingFinishedTime = 0; // Time when typing finished
-    private List<DialogueOption> options;
-    private int selectedOptionIndex = 0;
-    private boolean showOptions = false;
-    private DialogueOption quitOption = new DialogueOption("Goodbye.", new DialogueNode("Goodbye!"));
+    public List<DialogueOption> options;
+    public int selectedOptionIndex = 0;
+    public boolean showOptions = false;
+    public static DialogueOption quitOption = new DialogueOption("Goodbye.", new DialogueNode("Goodbye!"));
 
 
     public DialogueBox(Color boxColor, Color textColor, Font font, long charDelay, boolean stayVisibleAfterTyping, long visibilityDelay) {
@@ -137,25 +140,26 @@ public class DialogueBox extends UIElement {
         this.textColor = textColor;
     }
 
-    public void hanndleKeyPressed(int key) {
-        if (showOptions) {
-            if (key == KeyEvent.VK_UP) {
-                selectedOptionIndex = Math.max(0, selectedOptionIndex - 1);
-            } else if (key == KeyEvent.VK_DOWN) {
-                selectedOptionIndex = Math.min(options.size() - 1, selectedOptionIndex + 1);
-            } else if (key == KeyEvent.VK_ENTER) {
-                // Handle selection based on the selected option index
-                if (selectedOptionIndex >= 0 && selectedOptionIndex < options.size()) {
-                    DialogueOption selectedOption = options.get(selectedOptionIndex);
-                    // Do something with the selected option
-
-                    this.setMessage(selectedOption.getNextNode());
-                    if (selectedOption == quitOption)
-                    {
-                        setVisible(false);
-                    }
+    public static void registerKeybinds()
+    {
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_UP, () -> {
+            DialogueBox dialogueBox = PlayerEntity.getActionDialogue();
+            if (dialogueBox.showOptions) {
+                dialogueBox.selectedOptionIndex = Math.max(0, dialogueBox.selectedOptionIndex - 1);
+            }
+        });
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_DOWN, () -> {
+            DialogueBox dialogueBox = PlayerEntity.getActionDialogue();
+            if (dialogueBox.showOptions)
+            {
+                dialogueBox.selectedOptionIndex = Math.min(dialogueBox.options.size() - 1,dialogueBox.selectedOptionIndex + 1);
+                DialogueOption selectedOption = dialogueBox.options.get(dialogueBox.selectedOptionIndex);
+                dialogueBox.setMessage(selectedOption.getNextNode());
+                if (selectedOption == quitOption)
+                {
+                    dialogueBox.setVisible(false);
                 }
             }
-        }
+        });
     }
 }

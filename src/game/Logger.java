@@ -41,6 +41,8 @@ public class Logger {
 
         // Concatenate stack trace elements into a multiline string
         StringBuilder stackTraceBuilder = new StringBuilder();
+        stackTraceBuilder.append(err.getMessage());
+        stackTraceBuilder.append("\n");
         for (StackTraceElement element : err.getStackTrace()) {
             stackTraceBuilder.append(element.toString()).append("\n");
         }

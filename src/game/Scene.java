@@ -13,6 +13,7 @@ import javax.script.ScriptEngine;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Scene {
     private Logger logger = new Logger(this.getClass().getName());
@@ -26,6 +27,7 @@ public class Scene {
     private final String tilePath;
     private final int spawnX;
     private final int spawnY;
+    private ResourceLoader resourceLoader;
 
     public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY) {
         this.tileIdPath = tileIdPath;
@@ -71,13 +73,42 @@ public class Scene {
         pickupItemList.add(pickupItem);
     }
 
+    public int[] getRandomCoordsInMap() {
+        Random random = new Random();
+        int x, y;
+        Rectangle candidateRect;
+
+        boolean intersects;
+        do {
+            // Generate random coordinates
+            x = random.nextInt(Game.WIDTH);
+            y = random.nextInt(Game.HEIGHT);
+
+            // Create a rectangle representing the candidate point
+            candidateRect = new Rectangle(x, y, 1, 1);
+
+            // Check if the candidate rectangle intersects with any of the rectangles in the list
+            intersects = false;
+            for (Rectangle rect : boundaries) {
+                if (rect.intersects(candidateRect)) {
+                    intersects = true;
+                    break;
+                }
+            }
+
+            // Continue generating new coordinates until they do not intersect with any rectangles
+        } while (intersects);
+
+        return new int[]{x, y};
+
+    }
 
     private void init() {
         logger.Log("initializing");
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
         this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
-        this.currentTiles = new Tiles(tileIdPath, tilePath);
+        this.currentTiles = new Tiles(tileIdPath, tilePath, this.resourceLoader);
         playerEntity.setPosition(spawnX, spawnY);
         this.entityList.add(playerEntity);
 

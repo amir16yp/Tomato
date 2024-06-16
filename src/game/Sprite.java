@@ -19,12 +19,19 @@ public class Sprite {
     private final int width;
     private final int height;
     private Logger logger = new Logger(this.getClass().getName());
-    public Sprite(String path, int tileWidth, int tileHeight, int animationInterval) {
+    private ResourceLoader resourceLoader = Game.defaultResourceLoader;
+    public Sprite(String path, int tileWidth, int tileHeight, int animationInterval, ResourceLoader resourceLoader) {
         logger.addPrefix(path);
         this.animationInterval = animationInterval;
+        if (resourceLoader == null)
+        {
+            resourceLoader = new DefaultResourceLoader();
+        }
+        this.resourceLoader = resourceLoader;
+
         BufferedImage spriteSheet = null;
         try {
-            spriteSheet = ImageIO.read(Objects.requireNonNull(this.getClass().getResource(path)));
+            spriteSheet = resourceLoader.loadImage(path);
         } catch (Exception e) {
             logger.Error(e);
         }

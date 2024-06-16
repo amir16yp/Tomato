@@ -1,5 +1,6 @@
 package game.items;
 
+import game.ResourceLoader;
 import game.Sprite;
 
 public class Item
@@ -9,8 +10,6 @@ public class Item
     private int uses = 0;
     public long lastUsedTime = 0; // Track the time when the item was last used
     public long cooldownTime; // Cooldown duration in milliseconds
-
-
     public Item(Sprite sprite, int maxUsages, long cooldownTime)
     {
         this.sprite = sprite;

@@ -7,10 +7,10 @@ import java.awt.event.WindowFocusListener;
 
 public class Game extends JFrame {
     public static Screen screen = new Screen();
-    public static Game instance;
-
+    public static Game instance = new Game();
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+    public static final ResourceLoader defaultResourceLoader = new DefaultResourceLoader();
 
     public Game() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -19,7 +19,6 @@ public class Game extends JFrame {
         setResizable(false);
         add(screen);
         setLocationRelativeTo(null);
-        setVisible(true);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -50,6 +49,12 @@ public class Game extends JFrame {
     }
 
     public static void main(String[] args) {
-        instance = new Game();
+        // Load mods before making the game visible
+        ModLoader.loadMods(instance);
+        if (defaultResourceLoader != null)
+        {
+            instance.setVisible(true);
+
+        }
     }
 }
