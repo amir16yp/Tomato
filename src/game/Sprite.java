@@ -18,7 +18,7 @@ public class Sprite {
     private int y;
     private final int width;
     private final int height;
-    private Logger logger = new Logger(this.getClass().getName());
+    private final Logger logger = new Logger(this.getClass().getName());
     private ResourceLoader resourceLoader = Game.defaultResourceLoader;
     public Sprite(String path, int tileWidth, int tileHeight, int animationInterval, ResourceLoader resourceLoader) {
         logger.addPrefix(path);

@@ -12,7 +12,7 @@ public class Hotbar extends UIElement {
     private Sprite[] itemSprites; // Array to store item sprites
     private int[] itemCounts; // Array to store item counts
     private int selectedItemIndex; // Index of the currently selected item
-    private Logger logger = new Logger(this.getClass().getName());
+    private final Logger logger = new Logger(this.getClass().getName());
 
     public Hotbar(int x, int y, int width, int height, boolean visible) {
         super(x, y, width, height, visible);

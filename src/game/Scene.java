@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Scene {
-    private Logger logger = new Logger(this.getClass().getName());
+    private final Logger logger = new Logger(this.getClass().getName());
     public Tiles currentTiles;
     public java.util.List<Entity> entityList = new ArrayList<Entity>();
     public List<PickupItem> pickupItemList = new ArrayList<>();

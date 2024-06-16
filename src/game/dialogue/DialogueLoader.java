@@ -16,7 +16,7 @@ import java.net.URL;
 
 public class DialogueLoader {
 
-    private static Logger logger = new Logger(DialogueNode.class.getName());
+    private static final Logger logger = new Logger(DialogueNode.class.getName());
 
     public static DialogueNode loadDialogueTree(String xmlFilePath, ResourceLoader resourceLoader) {
         logger.Log("Loading from " + xmlFilePath);

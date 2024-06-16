@@ -29,7 +29,7 @@ public class Entity {
     private int x; // Current x-coordinate of the entity
     private int y; // Current y-coordinate of the entity
     public Direction currentDirection;
-    public Logger logger = new Logger(this.getClass().getName());
+    public final Logger logger = new Logger(this.getClass().getName());
     public Entity(String name) {
         logger.addPrefix(name);
         this.name = name;

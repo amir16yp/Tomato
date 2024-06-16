@@ -16,10 +16,9 @@ public class Tiles {
     private int rowCount;
     private int columnCount = 0;
     private final ResourceLoader resourceLoader;
-    private final Logger logger;
+    private final Logger logger = new Logger(this.getClass().getName());;
 
     public Tiles(String idCSV, String levelCSV, ResourceLoader resourceLoader) {
-        logger = new Logger(this.getClass().getName());
         logger.addPrefix(levelCSV);
         tileMap = new HashMap<>();
         tileSolidMap = new HashMap<>();

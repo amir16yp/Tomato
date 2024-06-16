@@ -12,7 +12,7 @@ public class KeybindRegistry {
 
     private Map<Integer, List<Runnable>> keyActions = new HashMap<>();
     private Map<Integer, List<Runnable>> keyReleasedActions = new HashMap<>();
-    private Logger logger = new Logger(this.getClass().getName());
+    private final Logger logger = new Logger(this.getClass().getName());
     public static KeybindRegistry registry = new KeybindRegistry();
 
     public void registerKeyPressedAction(int keyCode, Runnable action) {

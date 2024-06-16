@@ -16,11 +16,12 @@ public class ModLoader {
 
     public static List<Mod> mods = new ArrayList<>();
     private static final String MODS_FOLDER = "mods";
+    private static final Logger logger = new Logger(ModLoader.class.getName());
 
     public static void loadMods(Game game) {
         File modsDir = new File(MODS_FOLDER);
         if (!modsDir.exists() || !modsDir.isDirectory()) {
-            System.out.println("Mods directory not found.");
+            logger.Log("Mods directory not found.");
             return;
         }
 
@@ -32,7 +33,7 @@ public class ModLoader {
         });
 
         if (jarFiles == null || jarFiles.length == 0) {
-            System.out.println("No mod JAR files found.");
+            logger.Log("No mod JAR files found.");
             return;
         }
 
@@ -56,7 +57,7 @@ public class ModLoader {
                         if (Mod.class.isAssignableFrom(cls) && !cls.isInterface() && !java.lang.reflect.Modifier.isAbstract(cls.getModifiers())) {
                             Mod modInstance = (Mod) cls.getDeclaredConstructor().newInstance();
                             mods.add(modInstance);
-                            System.out.println("Loaded mod: " + className);
+                            logger.Log("Loaded mod: " + className);
                         }
                     }
                 }

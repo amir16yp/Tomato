@@ -9,7 +9,7 @@ public class UIElement
     private final int x, y, width, height;
     private boolean visible;
     private static int totalElementCount = 0;
-    public Logger logger = new Logger(this.getClass().getName());
+    public final Logger logger = new Logger(this.getClass().getName());
     public UIElement(int x, int y, int width, int height, boolean visible) {
         logger.addPrefix("E" + totalElementCount);
         totalElementCount++;
