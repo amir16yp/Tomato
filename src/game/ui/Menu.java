@@ -26,6 +26,10 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
         initializeButtons();
     }
 
+    public int startX() {
+        return getX() + (getWidth() - buttonWidth) / 2;
+    }
+
     public List<Button> getButtons()
     {
         return buttons;

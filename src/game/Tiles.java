@@ -1,10 +1,9 @@
 package game;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.List;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class Tiles {
 
@@ -16,14 +15,19 @@ public class Tiles {
     private int tileHeight = 32;
     private int rowCount;
     private int columnCount = 0;
-    private ResourceLoader resourceLoader;
-    private Logger logger = new Logger(this.getClass().getName());
+    private final ResourceLoader resourceLoader;
+    private final Logger logger;
 
     public Tiles(String idCSV, String levelCSV, ResourceLoader resourceLoader) {
+        logger = new Logger(this.getClass().getName());
         logger.addPrefix(levelCSV);
         tileMap = new HashMap<>();
         tileSolidMap = new HashMap<>();
         tileDoorTo = new HashMap<>();
+        if (resourceLoader == null)
+        {
+            resourceLoader = new DefaultResourceLoader();
+        }
         this.resourceLoader = resourceLoader;
         loadTilesIDFromCSV(idCSV);
         loadTilesFromCSV(levelCSV);
@@ -31,38 +35,37 @@ public class Tiles {
 
     private void loadTilesIDFromCSV(String csvPath) {
         logger.Log("Loading tile IDs from CSV " + csvPath);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(csvPath))))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
+        try {
+            List<String> lines = resourceLoader.loadTextFile(csvPath);
+            for (String line : lines) {
                 String[] parts = line.split(",");
-                //System.out.println(parts[1]);
                 int tileID = Integer.parseInt(parts[0]);
                 String spritePath = parts[1];
                 int animationInterval = Integer.parseInt(parts[2]);
                 boolean isSolid = Boolean.parseBoolean(parts[3]);
                 int doorToLevel = Integer.parseInt(parts[4]);
-                logger.Log("TileID: " + tileID + ", SpritePath: " + spritePath + ", AnimationInterval: " + animationInterval + ", IsSolid: " + isSolid + ", DoorToLevel: " + doorToLevel);
-                tileMap.put(tileID, new Sprite(spritePath, tileWidth, tileHeight, animationInterval,  this.resourceLoader));
+                logger.Log(String.format("TileID: %d, SpritePath: %s, AnimationInterval: %d, IsSolid: %b, DoorToLevel: %d",
+                        tileID, spritePath, animationInterval, isSolid, doorToLevel));
+                tileMap.put(tileID, new Sprite(spritePath, tileWidth, tileHeight, animationInterval, this.resourceLoader));
                 tileSolidMap.put(tileID, isSolid);
                 tileDoorTo.put(tileID, doorToLevel);
             }
-        } catch (Exception e) {
-            logger.Error(e);
+        } catch (IOException e) {
+            logger.Error("Error loading tile IDs from CSV: " + e.getMessage());
         }
     }
 
     private void loadTilesFromCSV(String csvPath) {
         List<Tile> loadedTiles = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(csvPath))))) {
-            String line;
+        try {
+            List<String> lines = resourceLoader.loadTextFile(csvPath);
             int row = 0;
-            while ((line = reader.readLine()) != null) {
-
+            for (String line : lines) {
                 String[] parts = line.split(",");
                 if (columnCount < parts.length) {
                     columnCount = parts.length; // Update columnCount to reflect the number of columns
                 }
-                for (int column = 0; parts.length > column; column++) {
+                for (int column = 0; column < parts.length; column++) {
                     int id = Integer.parseInt(parts[column]);
                     loadedTiles.add(new Tile(row, column, id, tileSolidMap.get(id), tileDoorTo.get(id)));
                 }
@@ -71,8 +74,8 @@ public class Tiles {
             rowCount = row;
             tiles = loadedTiles.toArray(Tile[]::new);
             logger.Log(String.format("Loaded tiles %d Rows, %d Columns", rowCount, columnCount));
-        } catch (Exception e) {
-            logger.Error(e);
+        } catch (IOException e) {
+            logger.Error("Error loading tiles from CSV: " + e.getMessage());
         }
     }
 
@@ -81,7 +84,6 @@ public class Tiles {
         if (tileSprite != null) {
             tileSprite.draw(g, x, y);
         } else {
-            // Handle missing tile (e.g., draw a placeholder or log a warning)
             logger.Error("Missing tile with ID: " + tileID);
         }
     }
@@ -98,7 +100,7 @@ public class Tiles {
 
     public void draw(Graphics g) {
         for (Tile tile : tiles) {
-            drawTile(g, tile.ID, tile.column * tileWidth, tile.row * getHeight());
+            drawTile(g, tile.ID, tile.column * tileWidth, tile.row * tileHeight);
         }
     }
 
@@ -112,7 +114,6 @@ public class Tiles {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
     }
-
 
     public int getWidth() {
         return tileWidth;
@@ -129,6 +130,7 @@ public class Tiles {
     public int getColumnCount() {
         return columnCount;
     }
+
     public void dispose() {
         logger.Log("Disposing tiles resources");
         for (Sprite tileSprite : tileMap.values()) {

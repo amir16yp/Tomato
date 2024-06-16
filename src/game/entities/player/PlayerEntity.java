@@ -63,7 +63,7 @@ public class PlayerEntity extends Entity {
         super.updatePosition();
         int levelID = currerntTile.doorToLevel;
         if (levelID >= 0) {
-            Screen.setCurrentScene(levelID);
+            Screen.setCurrentScene(Screen.scenes.get(levelID));
             this.setPosition(Screen.getCurrentScene().getSpawnX(), Screen.getCurrentScene().getSpawnY());
         }
     }

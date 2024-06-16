@@ -16,7 +16,7 @@ public class OptionsMenu extends Menu{
     public void initializeButtons() {
         super.initializeButtons();
 
-        int startX = getX() + (getWidth() - buttonWidth) / 2;
+        int startX = startX();
         int startY = getY() + 50;
 
         List<Button> buttons = getButtons();

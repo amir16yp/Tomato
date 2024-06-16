@@ -10,8 +10,8 @@ import java.util.List;
 
 public class PlayerInventory
 {
-    private static final Hotbar hotbarUI = new Hotbar((Game.WIDTH - (10 * 50 + 9 * 5)) / 2, 0, Game.WIDTH, 50, true);
-    private Item[] items;
+    public static final Hotbar hotbarUI = new Hotbar((Game.WIDTH - (10 * 50 + 9 * 5)) / 2, 0, Game.WIDTH, 50, true);
+    public Item[] items;
     private Item currentItem;
     private Logger logger = new Logger(this.getClass().getName());
     private static List<Item> itemHistory = new ArrayList<>();
@@ -54,6 +54,24 @@ public class PlayerInventory
         }
 
     }
+
+    public void clearSlot(int index)
+    {
+        items[index] = null;
+        hotbarUI.clearSlot(index);
+    }
+
+    public void clearSlots()
+    {
+        for (int i = 0; items.length > i; i++)
+        {
+            clearSlot(i);
+        }
+    }
+
+
+
+
 
     public void useItem()
     {

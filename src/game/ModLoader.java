@@ -1,5 +1,7 @@
 package game;
 
+import game.ui.Menu;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
@@ -67,7 +69,12 @@ public class ModLoader {
 
         // Initialize all loaded mods with the game instance
         for (Mod mod : mods) {
-            mod.init(game);
+            mod.init();
+            for (Menu menu : mod.getMenus())
+            {
+                Game.screen.addMouseListener(menu);
+                Game.screen.addMouseMotionListener(menu);
+            }
         }
     }
 }

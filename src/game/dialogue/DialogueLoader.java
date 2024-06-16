@@ -1,6 +1,8 @@
 package game.dialogue;
 
+import game.DefaultResourceLoader;
 import game.Logger;
+import game.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,25 +18,19 @@ public class DialogueLoader {
 
     private static Logger logger = new Logger(DialogueNode.class.getName());
 
-    public static DialogueNode loadDialogueTree(String xmlFilePath, boolean loadFromResources) {
-        logger.Log("Loading from " + xmlFilePath + " from resources: " + loadFromResources);
+    public static DialogueNode loadDialogueTree(String xmlFilePath, ResourceLoader resourceLoader) {
+        logger.Log("Loading from " + xmlFilePath);
         try {
             // Create document builder factory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             // Parse XML file
-            Document document;
-            if (loadFromResources) {
-                // Load from resources
-                URL resourceUrl = DialogueLoader.class.getResource(xmlFilePath);
-                InputStream inputStream = resourceUrl.openStream();
-                document = builder.parse(inputStream);
-            } else {
-                // Load from file path
-                document = builder.parse(new File(xmlFilePath));
+            if (resourceLoader == null)
+            {
+                resourceLoader = new DefaultResourceLoader();
             }
-
+            Document document = builder.parse(String.join("\n", resourceLoader.loadTextFile(xmlFilePath)));
             // Get root element
             Element rootElement = document.getDocumentElement();
 

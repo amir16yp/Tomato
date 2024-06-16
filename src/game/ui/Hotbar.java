@@ -79,6 +79,12 @@ public class Hotbar extends UIElement {
         }
     }
 
+    public void clearSlot(int index)
+    {
+        itemSprites[index] = null;
+        itemCounts[index] = 0;
+    }
+
     @Override
     public void update() {
         for (Sprite sprite : itemSprites) {

@@ -29,7 +29,9 @@ public class Scene {
     private final int spawnY;
     private ResourceLoader resourceLoader;
 
-    public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY) {
+    public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY, ResourceLoader resourceLoader)
+    {
+        this.resourceLoader = resourceLoader;
         this.tileIdPath = tileIdPath;
         logger.addPrefix(tilePath);
         this.tilePath = tilePath;
@@ -153,6 +155,7 @@ public class Scene {
                 element.draw(g);
             }
         }
+
         for (Entity entity : entityList) {
             entity.draw(g);
         }
