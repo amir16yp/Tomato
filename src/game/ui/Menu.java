@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.Game;
 import game.Logger;
 import game.Screen;
 import game.input.KeybindRegistry;
@@ -80,13 +81,22 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // Calculate scaled coordinates based on current screen size
+        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
+        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
+
+        // Iterate through buttons to check which one was clicked
         for (Button button : buttons) {
-            if (button.containsPoint(e.getX(), e.getY())) {
+            int scaledMouseX = (int) (e.getX() / scaleX);
+            int scaledMouseY = (int) (e.getY() / scaleY);
+
+            if (button.containsPoint(scaledMouseX, scaledMouseY)) {
                 selectOption(button);
                 break;
             }
         }
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -132,9 +142,16 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        // Calculate scaled coordinates based on current screen size
+        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
+        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
+
         boolean isAnyButtonSelected = false;
         for (Button button : buttons) {
-            if (button.containsPoint(e.getX(), e.getY())) {
+            int scaledMouseX = (int) (e.getX() / scaleX);
+            int scaledMouseY = (int) (e.getY() / scaleY);
+
+            if (button.containsPoint(scaledMouseX, scaledMouseY)) {
                 if (!button.isSelected) {
                     button.setSelected(true);
                 }
@@ -146,12 +163,12 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
                 }
             }
         }
+
         // If you want to deselect all buttons when not hovering over any button
         if (!isAnyButtonSelected) {
             deselectAllButtons();
         }
     }
-
     private void deselectAllButtons() {
         for (Button button : buttons) {
             button.setSelected(false);

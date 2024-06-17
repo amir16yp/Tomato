@@ -116,7 +116,11 @@ public class Scene {
 
         for (Tile tile : currentTiles.tiles) {
             if (tile.isSolid) {
-                boundaries.add(new Rectangle(tile.column * currentTiles.getWidth(), tile.row * currentTiles.getHeight(), currentTiles.getWidth(), currentTiles.getHeight()));
+                boundaries.add(
+                        new Rectangle
+                                (tile.column * currentTiles.getWidth(), tile.row * currentTiles.getHeight(),
+                                        currentTiles.getWidth(), currentTiles.getHeight() )
+                );
             }
         }
     }

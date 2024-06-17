@@ -9,7 +9,6 @@ import java.awt.Graphics;
 
 public class    Button extends UIElement {
     private String text;
-    private final Font font;
     private final Color textColor;
     private final Color backgroundColor;
     private final Color highlightColor;
@@ -18,7 +17,7 @@ public class    Button extends UIElement {
     public Button(int x, int y, int width, int height, String text) {
         super(x, y, width, height, true);
         this.text = text;
-        this.font = new Font("Arial", Font.PLAIN, 20);
+        //this.font = new Font("Arial", Font.PLAIN, 20);
         this.textColor = Color.WHITE;
         this.backgroundColor = new Color(108, 117, 125); ;
         this.highlightColor = new Color(40, 167, 69);;
@@ -45,8 +44,8 @@ public class    Button extends UIElement {
         this.text = text;
     }
     public boolean containsPoint(int x, int y) {
-        return x >= getX() && x <= getX() + getWidth() &&
-                y >= getY() && y <= getY() + getHeight();
+        return x >= getX() && x <= getX() + (getWidth()) &&
+                y >= getY() && y <= getY() + (getHeight());
     }
 
     public void setSelected(boolean selected) {
@@ -56,12 +55,18 @@ public class    Button extends UIElement {
     @Override
     public void draw(Graphics g) {
 
-        // Draw background
+        double scaleX = (double) Game.WIDTH / Game.ORIGINAL_WIDTH;
+        double scaleY = (double) Game.HEIGHT / Game.ORIGINAL_HEIGHT;
+
+        // Scale font size accordingly
+        int fontSize = (int) (20 * Math.min(scaleX, scaleY));
+
         g.setColor(isSelected ? highlightColor : backgroundColor);
         g.fillRect(getX(), getY(), getWidth(), getHeight());
 
         // Draw text
-        g.setFont(font);
+        Font scaledFont = new Font("Arial", Font.PLAIN, fontSize);
+        g.setFont(scaledFont);
         g.setColor(textColor);
         int stringWidth = g.getFontMetrics().stringWidth(text);
         int stringHeight = g.getFontMetrics().getHeight();

@@ -60,7 +60,7 @@ public class Projectile {
     }
 
     private void checkEntityCollision() {
-        Rectangle proposedHitbox = new Rectangle(x, y, this.sprite.getWidth(), this.sprite.getHeight());
+        Rectangle proposedHitbox = new Rectangle(x, y, this.sprite.getWidth() * Game.SCALE_FACTOR, this.sprite.getHeight() * Game.SCALE_FACTOR);
 
         for (Entity entity : Screen.getCurrentScene().entityList) {
             if (entity.hitbox.intersects(proposedHitbox) && entity != getShooter()) {
@@ -72,7 +72,7 @@ public class Projectile {
     }
 
     private void checkBoundaryCollision() {
-        Rectangle proposedHitbox = new Rectangle(x, y, this.sprite.getWidth(), this.sprite.getHeight());
+        Rectangle proposedHitbox = new Rectangle(x, y, this.sprite.getWidth() * Game.SCALE_FACTOR, this.sprite.getHeight() * Game.SCALE_FACTOR);
 
         for (Rectangle rectangle : Screen.getCurrentScene().boundaries) {
             if (proposedHitbox.intersects(rectangle)) {

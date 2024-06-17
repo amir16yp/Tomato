@@ -64,4 +64,12 @@ public class SplashScreen extends UIElement {
             g2d.setComposite(originalComposite);
         }
     }
+
+    public boolean isSplashOver() {
+        return splashOver;
+    }
+
+    public void setSplashOver(boolean splashOver) {
+        this.splashOver = splashOver;
+    }
 }

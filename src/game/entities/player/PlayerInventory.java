@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PlayerInventory
 {
-    public static final Hotbar hotbarUI = new Hotbar((Game.WIDTH - (10 * 50 + 9 * 5)) / 2, 0, Game.WIDTH, 50, true);
+    public static final Hotbar hotbarUI = new Hotbar((Game.ORIGINAL_WIDTH - (10 * 50 + 9 * 5)) / 2, 0, Game.ORIGINAL_WIDTH, 50, true);
     public Item[] items;
     private Item currentItem;
     private final Logger logger = new Logger(this.getClass().getName());

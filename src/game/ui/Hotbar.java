@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.Game;
 import game.Logger;
 import game.Sprite;
 
@@ -44,37 +45,40 @@ public class Hotbar extends UIElement {
             return;
         }
 
+        // Calculate scaled dimensions based on current screen size
+        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
+        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
+
         for (int i = 0; i < NUM_SLOTS; i++) {
-            int slotX = getX() + i * (SLOT_SIZE + SLOT_PADDING);
-            int slotY = getY();
+            int slotX = (int) (getX() + i * (SLOT_SIZE * scaleX + SLOT_PADDING * scaleX));
+            int slotY = (int) (getY());
 
             // Calculate the center of the slot
-            int centerX = slotX + SLOT_SIZE / 2;
-            int centerY = slotY + SLOT_SIZE / 2;
+            int centerX = (int) (slotX + SLOT_SIZE * scaleX / 2);
+            int centerY = (int) (slotY + SLOT_SIZE * scaleY / 2);
 
             // Draw slot background
-            g.setColor(new Color(128, 128, 128,128));
-            g.fillRect(slotX, slotY, SLOT_SIZE, SLOT_SIZE);
+            g.setColor(new Color(128, 128, 128, 128));
+            g.fillRect(slotX, slotY, (int) (SLOT_SIZE * scaleX), (int) (SLOT_SIZE * scaleY));
 
             // Draw item sprite
-            if (!(i > itemSprites.length))
-            {
-                if (itemSprites[i] != null) {
-                    int spriteX = centerX - itemSprites[i].getWidth() / 2;
-                    int spriteY = centerY - itemSprites[i].getHeight() / 2;
-                    itemSprites[i].draw(g, spriteX, spriteY);
-                }
+            if (itemSprites[i] != null) {
+                int scaledSpriteWidth = (int) (itemSprites[i].getWidth() * scaleX);
+                int scaledSpriteHeight = (int) (itemSprites[i].getHeight() * scaleY);
+                int spriteX = centerX - scaledSpriteWidth / 2;
+                int spriteY = centerY - scaledSpriteHeight / 2;
+                itemSprites[i].draw(g, spriteX, spriteY, scaledSpriteWidth, scaledSpriteHeight);
             }
-
 
             // Draw item count
             g.setColor(Color.WHITE);
-            g.drawString(String.valueOf(itemCounts[i]), slotX + SLOT_SIZE - 15, slotY + SLOT_SIZE - 10);
+            g.setFont(new Font("Arial", Font.PLAIN, (int) (12 * Math.min(scaleX, scaleY)))); // Scale font size
+            g.drawString(String.valueOf(itemCounts[i]), slotX + (int) (SLOT_SIZE * scaleX) - 15, slotY + (int) (SLOT_SIZE * scaleY) - 10);
 
             // Highlight selected slot
             if (i == selectedItemIndex) {
                 g.setColor(Color.YELLOW);
-                g.drawRect(slotX, slotY, SLOT_SIZE, SLOT_SIZE);
+                g.drawRect(slotX, slotY, (int) (SLOT_SIZE * scaleX), (int) (SLOT_SIZE * scaleY));
             }
         }
     }
