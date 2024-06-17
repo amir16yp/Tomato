@@ -71,7 +71,7 @@
 
         public static void main(String[] args) {
             // Load mods before making the game visible
-            ModLoader.loadMods(instance);
+            ModLoader.loadMods();
             instance.setVisible(true);
         }
     }

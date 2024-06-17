@@ -18,28 +18,34 @@ public class ModLoader {
     private static final String MODS_FOLDER = "mods";
     private static final Logger logger = new Logger(ModLoader.class.getName());
 
-    public static void loadMods(Game game) {
-        File modsDir = new File(MODS_FOLDER);
-        if (!modsDir.exists() || !modsDir.isDirectory()) {
-            logger.Log("Mods directory not found.");
-            return;
-        }
+    public static void loadMods() {
+        try {
+            // Find current JAR's directory
+            String jarPath = ModLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            File currentJar = new File(jarPath);
+            File currentDir = currentJar.getParentFile();
 
-        File[] jarFiles = modsDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isFile() && pathname.getName().endsWith(".jar");
+            // Append mods directory to current JAR's path
+            File modsDir = new File(currentDir, MODS_FOLDER);
+
+            if (!modsDir.exists() || !modsDir.isDirectory()) {
+                logger.Log("Mods directory not found.");
+                return;
             }
-        });
 
-        if (jarFiles == null || jarFiles.length == 0) {
-            logger.Log("No mod JAR files found.");
-            return;
-        }
+            File[] jarFiles = modsDir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.isFile() && pathname.getName().endsWith(".jar");
+                }
+            });
 
+            if (jarFiles == null || jarFiles.length == 0) {
+                logger.Log("No mod JAR files found.");
+                return;
+            }
 
-        for (File jarFile : jarFiles) {
-            try {
+            for (File jarFile : jarFiles) {
                 URL[] urls = {jarFile.toURI().toURL()};
                 URLClassLoader classLoader = new URLClassLoader(urls, ModLoader.class.getClassLoader());
 
@@ -63,19 +69,18 @@ public class ModLoader {
                 }
 
                 jar.close();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
 
-        // Initialize all loaded mods with the game instance
-        for (Mod mod : mods) {
-            mod.init();
-            for (Menu menu : mod.getMenus())
-            {
-                Game.screen.addMouseListener(menu);
-                Game.screen.addMouseMotionListener(menu);
+            // Initialize all loaded mods with the game instance
+            for (Mod mod : mods) {
+                mod.init();
+                for (Menu menu : mod.getMenus()) {
+                    Game.screen.addMouseListener(menu);
+                    Game.screen.addMouseMotionListener(menu);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
