@@ -13,11 +13,12 @@ public class    Button extends UIElement {
     private final Color backgroundColor;
     private final Color highlightColor;
     public boolean isSelected;
+    public Font font;
 
     public Button(int x, int y, int width, int height, String text) {
         super(x, y, width, height, true);
         this.text = text;
-        //this.font = new Font("Arial", Font.PLAIN, 20);
+        this.font = new Font("Arial", Font.PLAIN, 20);
         this.textColor = Color.WHITE;
         this.backgroundColor = new Color(108, 117, 125); ;
         this.highlightColor = new Color(40, 167, 69);;
@@ -55,18 +56,11 @@ public class    Button extends UIElement {
     @Override
     public void draw(Graphics g) {
 
-        double scaleX = (double) Game.WIDTH / Game.ORIGINAL_WIDTH;
-        double scaleY = (double) Game.HEIGHT / Game.ORIGINAL_HEIGHT;
-
-        // Scale font size accordingly
-        int fontSize = (int) (20 * Math.min(scaleX, scaleY));
-
         g.setColor(isSelected ? highlightColor : backgroundColor);
         g.fillRect(getX(), getY(), getWidth(), getHeight());
 
         // Draw text
-        Font scaledFont = new Font("Arial", Font.PLAIN, fontSize);
-        g.setFont(scaledFont);
+        g.setFont(this.font);
         g.setColor(textColor);
         int stringWidth = g.getFontMetrics().stringWidth(text);
         int stringHeight = g.getFontMetrics().getHeight();

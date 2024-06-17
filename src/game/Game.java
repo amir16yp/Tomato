@@ -38,7 +38,7 @@
             setTitle("Tomato");
             setResizable(false);
             add(screen);
-            setResolution(1280, 768); // Initial resolution setup
+            setResolution(1280, 960); // Initial resolution setup
             setLocationRelativeTo(null);
 
             addWindowListener(new WindowAdapter() {
