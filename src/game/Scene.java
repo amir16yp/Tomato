@@ -11,6 +11,7 @@ import game.ui.UIElement;
 
 import javax.script.ScriptEngine;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,6 +29,7 @@ public class Scene {
     private final int spawnX;
     private final int spawnY;
     private ResourceLoader resourceLoader;
+    public Lighting lighting = new Lighting();
 
     public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY, ResourceLoader resourceLoader)
     {
@@ -179,24 +181,37 @@ public class Scene {
         }
         pickupItemList.removeAll(itemsToRemove);
     }
+    public void draw(Graphics2D g2d) {
+        // Create an off-screen image to render the scene
+        BufferedImage sceneImage = new BufferedImage(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D sceneGraphics = sceneImage.createGraphics();
 
-    public void draw(Graphics g2d) {
-        currentTiles.draw(g2d);
-        for (UIElement element : uiElements)
-        {
-            if (element.isVisible())
-            {
-                element.draw(g2d);
-            }
-        }
+        // Render scene components to the off-screen image (back to front)
+        currentTiles.draw(sceneGraphics);
 
+        // Draw entities (order might be important within entities)
         for (Entity entity : entityList) {
-            entity.draw(g2d);
+            entity.draw(sceneGraphics);
         }
 
-        for (PickupItem item : pickupItemList)
+        // Draw pickup items
+        for (PickupItem item : pickupItemList) {
+            item.draw(sceneGraphics);
+        }
+
+        lighting.drawLighting(sceneGraphics, playerEntity, sceneImage);
+        lighting.drawLightSources(g2d);
+        // Draw the final scene image to the screen
+        g2d.drawImage(sceneImage, 0, 0, null);
+
+        // Dispose of the off-screen graphics object
+        sceneGraphics.dispose();
+        for (UIElement uiElement : this.uiElements)
         {
-            item.draw(g2d);
+            if (uiElement.isVisible())
+            {
+                uiElement.draw(g2d);
+            }
         }
     }
 

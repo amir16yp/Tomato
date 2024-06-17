@@ -39,6 +39,9 @@ public class Entity {
         currentDirection = Direction.getRandomDirection();
     }
 
+    public Sprite getCurrentSprite() {
+        return currentSprite;
+    }
 
     // Add a sprite to the entity
     public void addSprite(String name, Sprite sprite) {
