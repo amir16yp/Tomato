@@ -172,6 +172,16 @@ public class Entity {
         return false; // No collision with any boundaries
     }
 
+    public int getCenterX() {
+        return x + currentSprite.getWidth() / 2;
+    }
+
+    // Get the center y-coordinate of the entity
+    public int getCenterY() {
+        return y + currentSprite.getHeight() / 2;
+    }
+
+
     public void stopMoving() {
         velocityX = 0;
         velocityY = 0;
@@ -186,10 +196,10 @@ public class Entity {
         if (!checkCollision(proposedX, proposedY)) {
             setPosition(proposedX, proposedY);
         }
-        int width = Screen.getCurrentScene().currentTiles.getWidth();
-        int height = Screen.getCurrentScene().currentTiles.getHeight();
+        //int width = Screen.getCurrentScene().currentTiles.getWidth();
+        //int height = Screen.getCurrentScene().currentTiles.getHeight();
 
-        currerntTile = Screen.getCurrentScene().currentTiles.getTile(x / width, y / height);
+        currerntTile = Screen.getCurrentScene().getTileInCoordinate(this.getCenterX(), this.getCenterY());
     }
     public boolean isFacingWall(Direction direction) {
         // Calculate the next position of the hitbox based on the current direction

@@ -32,7 +32,7 @@ public class MeleeEnemyEntity extends EnemyEntity {
         if (!isAttacking()) {
             updateMoveSprite();
         }
-        updateAI(Screen.getCurrentScene().playerEntity);
+        updateAI(PlayerEntity.getPlayer());
     }
 
     public void updateAI(PlayerEntity player) {
@@ -90,24 +90,33 @@ public class MeleeEnemyEntity extends EnemyEntity {
         if (currentTime - lastAttackTime < ATTACK_COOLDOWN) {
             return; // Still on cooldown, can't attack yet
         }
-
-        // player.takeDamage returns true if player died as a result of the damage
-        /*
-        if (player.takeDamage(getDamageAmount())) {
-            player.die();
-        }
-         */
         player.takeDamage(getDamageAmount());
         lastAttackTime = currentTime;
 
-        switch (getCurrentDirection()) {
-            case Direction.UP -> setCurrentSprite("attack_north");
-            case Direction.DOWN -> setCurrentSprite("attack_south");
-            case Direction.LEFT -> setCurrentSprite("attack_west");
-            case Direction.RIGHT -> setCurrentSprite("attack_east");
+        Direction currentDirection = getCurrentDirection();
+
+        // Determine the attack sprite based on the current direction
+        String attackSprite = null;
+        switch (currentDirection) {
+            case Direction.UP:
+                attackSprite = "attack_north";
+                break;
+            case Direction.DOWN:
+                attackSprite = "attack_south";
+                break;
+            case Direction.LEFT:
+                attackSprite = "attack_west";
+                break;
+            case Direction.RIGHT:
+                attackSprite = "attack_east";
+                break;
+        }
+
+        // Only set the attack sprite if it's different from the current sprite
+        if (!getCurrentSprite().equals(attackSprite)) {
+            setCurrentSprite(attackSprite);
         }
     }
-
 
     private void updateSpriteDirection(double normX, double normY) {
         if (Math.abs(normX) > Math.abs(normY)) {
