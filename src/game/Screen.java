@@ -82,7 +82,7 @@
             return currentScene;
         }
 
-        private void setupKeyListener() {
+            private void setupKeyListener() {
             KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_ESCAPE, () -> {
                 setPaused(!isPaused);
                 currentMenu.setVisible(isPaused);
@@ -95,12 +95,12 @@
             KeyAdapter keyAdapter = new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    KeybindRegistry.registry.handleKeyPress(e.getKeyCode());
+                    KeybindRegistry.registry.handleKeyPress(e);
                 }
 
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    KeybindRegistry.registry.handleKeyRelease(e.getKeyCode());
+                    KeybindRegistry.registry.handleKeyRelease(e);
                 }
             };
             addKeyListener(keyAdapter);
@@ -113,6 +113,13 @@
         private void update() {
             if (splashScreen.splashOver) {
                 if (!isPaused) {
+                    for (Integer keyCode : KeybindRegistry.registry.getKeysHeld())
+                    {
+                        if (KeybindRegistry.registry.isKeyPressed(keyCode))
+                        {
+                            KeybindRegistry.registry.handleKeyHeld(keyCode);
+                        }
+                    }
                     currentScene.update();
                 }
                 for (Mod mod : ModLoader.mods) {

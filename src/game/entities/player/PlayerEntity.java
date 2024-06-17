@@ -16,7 +16,6 @@ import java.util.Random;
 
 public class PlayerEntity extends Entity {
 
-    public static Direction playerDirection;
     public Sprite projectileSprite = new Sprite("sprites/player/bullet.png", 8, 8, 100, Game.defaultResourceLoader);
     public static DialogueBox getActionDialogue() {
         return (DialogueBox) Screen.getCurrentScene().uiElements.get(0);
@@ -65,10 +64,10 @@ public class PlayerEntity extends Entity {
     }
 
     public static void registerKeybinds() {
-        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_W, () -> moveWrap(Direction.UP, true));
-        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_S, () -> moveWrap(Direction.DOWN, true));
-        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_D, () -> moveWrap(Direction.RIGHT, true));
-        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_A, () -> moveWrap(Direction.LEFT, true));
+        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_W, () -> moveWrap(Direction.UP, true));
+        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_S, () -> moveWrap(Direction.DOWN, true));
+        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_D, () -> moveWrap(Direction.RIGHT, true));
+        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_A, () -> moveWrap(Direction.LEFT, true));
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_SPACE, () -> inventory.useItem());
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_1, () -> inventory.selectItem(0));
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_2, () -> inventory.selectItem(1));
@@ -104,10 +103,10 @@ public class PlayerEntity extends Entity {
         });
         //KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_Z, () -> Screen.getCurrentScene().spawnItem(new DoorKey(new Random().nextInt(0, 1)), 50, 50));
 
-        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_W, () -> stopPlayerMovingWrap());
-        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_S, () -> stopPlayerMovingWrap());
-        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_D, () -> stopPlayerMovingWrap());
-        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_A, () -> stopPlayerMovingWrap());
+        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_W, PlayerEntity::stopPlayerMovingWrap);
+        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_S, PlayerEntity::stopPlayerMovingWrap);
+        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_D, PlayerEntity::stopPlayerMovingWrap);
+        KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_A, PlayerEntity::stopPlayerMovingWrap);
     }
 
     public static PlayerEntity getPlayer()
@@ -139,7 +138,6 @@ public class PlayerEntity extends Entity {
     public void move(Direction direction, boolean unPause) {
         if (isInDialogue) { return;}
         super.move(direction, unPause);
-        playerDirection = direction;
     }
     public void stopPlayerMoving() {
         stopMoving();
