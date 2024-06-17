@@ -9,11 +9,10 @@
     public class Game extends JFrame {
         public static Screen screen = new Screen();
         public static Game instance = new Game();
-        public static final int ORIGINAL_WIDTH = 800;
-        public static final int ORIGINAL_HEIGHT = 600;
+        public static final int ORIGINAL_WIDTH = 768;
+        public static final int ORIGINAL_HEIGHT = 576;
         public static int WIDTH = ORIGINAL_WIDTH;
         public static int HEIGHT = ORIGINAL_HEIGHT;
-        public static int SCALE_FACTOR = 2;
         public static final ResourceLoader defaultResourceLoader = new DefaultResourceLoader();
 
         public void setResolution(int width, int height) {
@@ -24,6 +23,7 @@
             //SCALE_FACTOR = Math.min(WIDTH / ORIGINAL_WIDTH, HEIGHT / ORIGINAL_HEIGHT);
 
             setSize(WIDTH, HEIGHT);
+            this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
             // Adjust the actual window size and screen panel size
             screen.setSize(WIDTH, HEIGHT);
             screen.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -32,13 +32,13 @@
         }
 
         public Game() {
+            setResolution(800, 600); // Adjusted resolution
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             //setResolution(800 * 2, 600 * 2);
-            setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
+            //setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
             setTitle("Tomato");
             setResizable(false);
             add(screen);
-            setResolution(1280, 960); // Initial resolution setup
             setLocationRelativeTo(null);
 
             addWindowListener(new WindowAdapter() {

@@ -150,23 +150,23 @@ public class Scene {
         pickupItemList.removeAll(itemsToRemove);
     }
 
-    public void draw(Graphics g) {
-        currentTiles.draw(g);
+    public void draw(Graphics g2d) {
+        currentTiles.draw(g2d);
         for (UIElement element : uiElements)
         {
             if (element.isVisible())
             {
-                element.draw(g);
+                element.draw(g2d);
             }
         }
 
         for (Entity entity : entityList) {
-            entity.draw(g);
+            entity.draw(g2d);
         }
 
         for (PickupItem item : pickupItemList)
         {
-            item.draw(g);
+            item.draw(g2d);
         }
     }
 

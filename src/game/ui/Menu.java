@@ -5,6 +5,7 @@ import game.Logger;
 import game.Screen;
 import game.input.KeybindRegistry;
 
+import javax.script.ScriptEngine;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -63,6 +64,13 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
                 Screen.currentMenu.Down();
             }
         });
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_ENTER, () -> {
+            if (visible)
+            {
+                Screen.currentMenu.selectOption();
+            }
+        });
+
     }
 
     public void Up()
@@ -81,16 +89,9 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Calculate scaled coordinates based on current screen size
-        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
-        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
-
         // Iterate through buttons to check which one was clicked
         for (Button button : buttons) {
-            int scaledMouseX = (int) (e.getX() / scaleX);
-            int scaledMouseY = (int) (e.getY() / scaleY);
-
-            if (button.containsPoint(scaledMouseX, scaledMouseY)) {
+            if (button.containsPoint(e.getX(), e.getY())) {
                 selectOption(button);
                 break;
             }
@@ -142,16 +143,10 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        // Calculate scaled coordinates based on current screen size
-        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
-        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
-
         boolean isAnyButtonSelected = false;
         for (Button button : buttons) {
-            int scaledMouseX = (int) (e.getX() / scaleX);
-            int scaledMouseY = (int) (e.getY() / scaleY);
 
-            if (button.containsPoint(scaledMouseX, scaledMouseY)) {
+            if (button.containsPoint(e.getX(), e.getY())) {
                 if (!button.isSelected) {
                     button.setSelected(true);
                 }

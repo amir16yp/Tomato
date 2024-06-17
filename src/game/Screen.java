@@ -126,23 +126,17 @@
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
+
             // Calculate scale factors for width and height
             double scaleX = (double) getWidth() / Game.ORIGINAL_WIDTH;
             double scaleY = (double) getHeight() / Game.ORIGINAL_HEIGHT;
 
-            // Use the smaller scale factor to maintain aspect ratio
-            double scaleFactor = Math.min(scaleX, scaleY);
+            // Use the larger scale factor to cover the entire area
+            double scaleFactor = Math.max(scaleX, scaleY);
 
-            // Calculate scaled dimensions based on the original dimensions and scale factor
-            int scaledWidth = (int) (Game.ORIGINAL_WIDTH * scaleFactor);
-            int scaledHeight = (int) (Game.ORIGINAL_HEIGHT * scaleFactor);
+            // Apply scaling
+            g2d.scale(scaleX, scaleY); // Scale the graphics context
 
-            // Calculate offsets to center the content if necessary
-            int offsetX = (getWidth() - scaledWidth) / 2;
-            int offsetY = (getHeight() - scaledHeight) / 2;
-
-            g2d.translate(offsetX, offsetY); // Translate to center the content
-            g2d.scale(scaleFactor, scaleFactor); // Scale the graphics context
             if (splashScreen != null && splashScreen.isVisible()) {
                 splashScreen.draw(g2d);
             } else {
@@ -151,6 +145,7 @@
                 } else {
                     currentMenu.draw(g2d); // Draw the start menu
                 }
+
                 if (OptionsMenu.SHOW_STATS) {
                     long totalMemory = runtime.totalMemory();
                     long freeMemory = runtime.freeMemory();
@@ -159,6 +154,7 @@
                     g2d.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Set monospaced font properties
                     g2d.drawString("Used memory: " + Utils.humanReadableByteCount(usedMemory), 10, 20);
                 }
+
                 for (Mod mod : ModLoader.mods) {
                     mod.draw(g2d);
                 }

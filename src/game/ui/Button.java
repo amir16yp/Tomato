@@ -45,10 +45,18 @@ public class    Button extends UIElement {
         this.text = text;
     }
     public boolean containsPoint(int x, int y) {
-        return x >= getX() && x <= getX() + (getWidth()) &&
-                y >= getY() && y <= getY() + (getHeight());
-    }
+        // Calculate scale factors
+        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
+        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
 
+        // Adjust mouse coordinates for scale
+        int scaledX = (int) (x / scaleX);
+        int scaledY = (int) (y / scaleY);
+
+        // Check if the scaled coordinates are within the button bounds
+        return scaledX >= getX() && scaledX <= getX() + getWidth() &&
+                scaledY >= getY() && scaledY <= getY() + getHeight();
+    }
     public void setSelected(boolean selected) {
         isSelected = selected;
     }

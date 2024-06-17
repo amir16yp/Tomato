@@ -67,10 +67,10 @@ public class Sprite {
         if (isFlipped) {
             // Draw the image flipped
             BufferedImage flippedTile = flipTile(tiles[currentFrame]);
-            g.drawImage(flippedTile, x, y, width * Game.SCALE_FACTOR, height * Game.SCALE_FACTOR, null);
+            g.drawImage(flippedTile, x, y, width, height, null);
         } else {
             // Draw the image normally
-            g.drawImage(tiles[currentFrame], x, y, width * Game.SCALE_FACTOR, height * Game.SCALE_FACTOR ,null);
+            g.drawImage(tiles[currentFrame], x, y, width, height ,null);
         }
     }
 
