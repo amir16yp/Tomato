@@ -80,7 +80,7 @@ public class ModLoader {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.Error(e);
         }
     }
 }
