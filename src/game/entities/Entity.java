@@ -99,13 +99,6 @@ public class Entity {
                 inactiveProjectiles.add(projectile);
             }
         }
-        /*
-        if (!inactiveProjectiles.isEmpty())
-        {
-            logger.Log("removing " + inactiveProjectiles.size() + " projectiles");
-        }
-         */
-        // Remove inactive projectiles
         shotProjectiles.removeAll(inactiveProjectiles);
     }
 

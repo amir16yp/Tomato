@@ -11,6 +11,7 @@ import game.entities.player.PlayerEntity;
 import game.input.KeybindRegistry;
 import game.ui.*;
 import game.ui.Menu;
+import game.ui.SplashScreen;
 
 import static game.Utils.runtime;
 
@@ -20,12 +21,13 @@ public class Screen extends JPanel {
     private static final int TARGET_FRAME_TIME = 30;
     public static Logger logger = new Logger(Screen.class.getName());
     public static boolean isPaused = true;
+    SplashScreen splashScreen = new SplashScreen(Game.WIDTH, Game.HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png");
 
     static {
         // Initial scenes
         scenes.add(new Scene("tileid.csv", "level.csv", 320, 320, Game.defaultResourceLoader));
         scenes.add(new Scene("tileid.csv", "level2.csv", 320, 320, Game.defaultResourceLoader));
-        currentScene = scenes.getFirst();
+        currentScene = scenes.get(0);
     }
 
     public static void setPaused(boolean paused) {
@@ -51,6 +53,16 @@ public class Screen extends JPanel {
             this.addMouseListener(menu);
             this.addMouseMotionListener(menu);
         }
+        showSplashScreen();
+    }
+
+    public void showSplashScreen() {
+        splashScreen.setVisible(true);
+    }
+
+    public void showMainMenu() {
+        splashScreen.setVisible(false);
+        setCurrentMenu(menus[0]);
         startGameLoop();
     }
 
@@ -99,11 +111,13 @@ public class Screen extends JPanel {
     }
 
     private void update() {
-        if (!isPaused) {
-            currentScene.update();
-        }
-        for (Mod mod : ModLoader.mods) {
-            mod.update();
+        if (splashScreen.splashOver) {
+            if (!isPaused) {
+                currentScene.update();
+            }
+            for (Mod mod : ModLoader.mods) {
+                mod.update();
+            }
         }
         repaint();
     }
@@ -111,21 +125,25 @@ public class Screen extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (!isPaused) {
-            currentScene.draw(g);
+        if (splashScreen != null && splashScreen.isVisible()) {
+            splashScreen.draw(g);
         } else {
-            currentMenu.draw(g); // Draw the start menu
-        }
-        if (OptionsMenu.SHOW_STATS) {
-            long totalMemory = runtime.totalMemory();
-            long freeMemory = runtime.freeMemory();
-            long usedMemory = totalMemory - freeMemory;
-            g.setColor(Color.YELLOW);
-            g.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Set monospaced font properties
-            g.drawString("Used memory: " + Utils.humanReadableByteCount(usedMemory), 10, 20);
-        }
-        for (Mod mod : ModLoader.mods) {
-            mod.draw(g);
+            if (!isPaused) {
+                currentScene.draw(g);
+            } else {
+                currentMenu.draw(g); // Draw the start menu
+            }
+            if (OptionsMenu.SHOW_STATS) {
+                long totalMemory = runtime.totalMemory();
+                long freeMemory = runtime.freeMemory();
+                long usedMemory = totalMemory - freeMemory;
+                g.setColor(Color.YELLOW);
+                g.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Set monospaced font properties
+                g.drawString("Used memory: " + Utils.humanReadableByteCount(usedMemory), 10, 20);
+            }
+            for (Mod mod : ModLoader.mods) {
+                mod.draw(g);
+            }
         }
     }
 

@@ -51,10 +51,6 @@ public class Game extends JFrame {
     public static void main(String[] args) {
         // Load mods before making the game visible
         ModLoader.loadMods(instance);
-        if (defaultResourceLoader != null)
-        {
-            instance.setVisible(true);
-
-        }
+        instance.setVisible(true);
     }
 }
