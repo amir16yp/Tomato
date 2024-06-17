@@ -29,7 +29,7 @@ public class Scene {
     private final int spawnX;
     private final int spawnY;
     private ResourceLoader resourceLoader;
-    public Lighting lighting = new Lighting();
+    public Lighting lighting;
     public boolean initalized = false;
     public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY, ResourceLoader resourceLoader)
     {
@@ -52,6 +52,7 @@ public class Scene {
         playerEntity = new PlayerEntity();
         PlayerInventory.clearItemHistory();
         PlayerEntity.inventory.resetUses();
+        lighting = new Lighting();
         boundaries = new ArrayList<Rectangle>();
         uiElements = new ArrayList<UIElement>();
         init();
@@ -139,6 +140,7 @@ public class Scene {
 
     void init() {
         logger.Log("initializing");
+        lighting = new Lighting();
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
         this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
@@ -233,6 +235,11 @@ public class Scene {
         entityList.clear();
         boundaries.clear();
         uiElements.clear();
+        if (lighting != null)
+        {
+            lighting.clearLightSources();
+            lighting = null;
+        }
         if (currentTiles != null)
         {
             currentTiles.dispose();
@@ -241,6 +248,7 @@ public class Scene {
         {
             playerEntity.dispose();
         }
+        this.initalized = false;
     }
 
 }
