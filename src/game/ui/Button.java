@@ -46,8 +46,8 @@ public class    Button extends UIElement {
     }
     public boolean containsPoint(int x, int y) {
         // Calculate scale factors
-        double scaleX = (double) Game.screen.getWidth() / Game.ORIGINAL_WIDTH;
-        double scaleY = (double) Game.screen.getHeight() / Game.ORIGINAL_HEIGHT;
+        double scaleX = (double) Game.screen.getWidth() / Game.INTERNAL_WIDTH;
+        double scaleY = (double) Game.screen.getHeight() / Game.INTERNAL_HEIGHT;
 
         // Adjust mouse coordinates for scale
         int scaledX = (int) (x / scaleX);

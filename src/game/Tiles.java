@@ -11,15 +11,17 @@ public class Tiles {
     private final Map<Integer, Sprite> tileMap;
     private final Map<Integer, Boolean> tileSolidMap;
     private final Map<Integer, Integer> tileDoorTo;
-    private int tileWidth = 32;
-    private int tileHeight = 32;
+    private int tileWidth; // to change tile width and height
+    private int tileHeight; // make sure to adjust internal resolution to a resolution divisible by the tile width and height
     private int rowCount;
     private int columnCount = 0;
     private final ResourceLoader resourceLoader;
     private final Logger logger = new Logger(this.getClass().getName());;
 
-    public Tiles(String idCSV, String levelCSV, ResourceLoader resourceLoader) {
+    public Tiles(String idCSV, String levelCSV, int tileWidth, int tileHeight, ResourceLoader resourceLoader) {
         logger.addPrefix(levelCSV);
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         tileMap = new HashMap<>();
         tileSolidMap = new HashMap<>();
         tileDoorTo = new HashMap<>();

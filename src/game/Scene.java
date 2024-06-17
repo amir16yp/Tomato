@@ -110,7 +110,8 @@ public class Scene {
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
         this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
-        this.currentTiles = new Tiles(tileIdPath, tilePath, this.resourceLoader);
+        // make sure to adjust internal resolution to a resolution divisible by the tile width and height
+        this.currentTiles = new Tiles(tileIdPath, tilePath, 32, 32, this.resourceLoader);
         playerEntity.setPosition(spawnX, spawnY);
         this.entityList.add(playerEntity);
 

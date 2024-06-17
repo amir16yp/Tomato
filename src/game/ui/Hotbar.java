@@ -46,8 +46,8 @@ public class Hotbar extends UIElement {
         }
 
         // Calculate scaled dimensions based on current screen size
-        double scaleX = (double) Game.WIDTH / Game.ORIGINAL_WIDTH;
-        double scaleY = (double) Game.HEIGHT / Game.ORIGINAL_HEIGHT;
+        double scaleX = (double) Game.WIDTH / Game.INTERNAL_WIDTH;
+        double scaleY = (double) Game.HEIGHT / Game.INTERNAL_HEIGHT;
 
         for (int i = 0; i < NUM_SLOTS; i++) {
             int slotX = (int) (getX() + i * (SLOT_SIZE * scaleX + SLOT_PADDING * scaleX));

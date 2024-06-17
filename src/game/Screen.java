@@ -21,7 +21,7 @@
         private static final int TARGET_FRAME_TIME = 30;
         public static Logger logger = new Logger(Screen.class.getName());
         public static boolean isPaused = true;
-        SplashScreen splashScreen = new SplashScreen(Game.ORIGINAL_WIDTH, Game.ORIGINAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png");
+        SplashScreen splashScreen = new SplashScreen(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png");
 
         static {
             // Initial scenes
@@ -38,8 +38,8 @@
         }
 
         public static Menu[] menus = new Menu[]{
-                new StartMenu(0, 0, Game.ORIGINAL_WIDTH, Game.ORIGINAL_HEIGHT),
-                new OptionsMenu(0, 0, Game.ORIGINAL_WIDTH, Game.ORIGINAL_HEIGHT)
+                new StartMenu(0, 0, Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT),
+                new OptionsMenu(0, 0, Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT)
         };
         public static List<Menu> modMenus = new ArrayList<>();
         public static Menu currentMenu = menus[0];
@@ -128,13 +128,12 @@
             Graphics2D g2d = (Graphics2D) g;
 
             // Calculate scale factors for width and height
-            double scaleX = (double) getWidth() / Game.ORIGINAL_WIDTH;
-            double scaleY = (double) getHeight() / Game.ORIGINAL_HEIGHT;
+            double scaleX = (double) getWidth() / Game.INTERNAL_WIDTH;
+            double scaleY = (double) getHeight() / Game.INTERNAL_HEIGHT;
 
             // Use the larger scale factor to cover the entire area
-            double scaleFactor = Math.max(scaleX, scaleY);
+            //double scaleFactor = Math.max(scaleX, scaleY);
 
-            // Apply scaling
             g2d.scale(scaleX, scaleY); // Scale the graphics context
 
             if (splashScreen != null && splashScreen.isVisible()) {
