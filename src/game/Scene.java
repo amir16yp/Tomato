@@ -39,6 +39,7 @@ public class Scene {
         this.tilePath = tilePath;
         this.spawnX = playerSpawnX;
         this.spawnY = playerSpawnY;
+        this.lighting = new Lighting();
         logger.Log(String.format("Spawn X:%d Y:%d", spawnX, spawnY));
         //init();
     }
@@ -140,7 +141,6 @@ public class Scene {
 
     void init() {
         logger.Log("initializing");
-        lighting = new Lighting();
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
         this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
