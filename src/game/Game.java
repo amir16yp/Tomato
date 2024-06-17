@@ -6,7 +6,7 @@
     import java.awt.event.WindowEvent;
     import java.awt.event.WindowFocusListener;
 
-    public class Game extends JFrame {
+    public class    Game extends JFrame {
         public static Screen screen = new Screen();
         public static Game instance = new Game();
         public static final int INTERNAL_WIDTH = 768;
@@ -32,7 +32,7 @@
         }
 
         public Game() {
-            setResolution(800, 600); // Adjusted resolution
+            setResolution(1280  , 960); // Adjusted resolution
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             //setResolution(800 * 2, 600 * 2);
             //setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);

@@ -30,7 +30,7 @@ public class Scene {
     private final int spawnY;
     private ResourceLoader resourceLoader;
     public Lighting lighting = new Lighting();
-
+    public boolean initalized = false;
     public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY, ResourceLoader resourceLoader)
     {
         this.resourceLoader = resourceLoader;
@@ -40,11 +40,12 @@ public class Scene {
         this.spawnX = playerSpawnX;
         this.spawnY = playerSpawnY;
         logger.Log(String.format("Spawn X:%d Y:%d", spawnX, spawnY));
-        init();
+        //init();
     }
 
     public void reset() {
         logger.Log("resetting scene");
+        initalized = false;
         currentTiles = null;
         entityList = new ArrayList<Entity>();
         pickupItemList = new ArrayList<PickupItem>();
@@ -136,7 +137,7 @@ public class Scene {
         return getTileInCoordinate(coords[0], coords[1]);
     }
 
-    private void init() {
+    void init() {
         logger.Log("initializing");
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
@@ -155,6 +156,7 @@ public class Scene {
                 );
             }
         }
+        initalized = true;
     }
 
     public void update() {
@@ -231,8 +233,14 @@ public class Scene {
         entityList.clear();
         boundaries.clear();
         uiElements.clear();
-        currentTiles.dispose();
-        playerEntity.dispose();
+        if (currentTiles != null)
+        {
+            currentTiles.dispose();
+        }
+        if (playerEntity != null)
+        {
+            playerEntity.dispose();
+        }
     }
 
 }

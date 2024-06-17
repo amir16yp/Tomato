@@ -18,16 +18,15 @@
     public class Screen extends JPanel {
         public static List<Scene> scenes = new ArrayList<>();
         private static Scene currentScene;
-        private static final int TARGET_FRAME_TIME = 30;
+        public static final int TARGET_FRAME_TIME = 30;
         public static Logger logger = new Logger(Screen.class.getName());
         public static boolean isPaused = true;
-        SplashScreen splashScreen = new SplashScreen(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png");
+        SplashScreen splashScreen = new SplashScreen(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png", SplashType.FADE_OUT );
 
         static {
             // Initial scenes
             scenes.add(new Scene("tileid.csv", "level.csv", 320, 320, Game.defaultResourceLoader));
             scenes.add(new Scene("tileid.csv", "level2.csv", 320, 320, Game.defaultResourceLoader));
-            currentScene = scenes.get(0);
         }
 
         public static void setPaused(boolean paused) {
@@ -64,6 +63,8 @@
             splashScreen.setVisible(false);
             setCurrentMenu(menus[0]);
             startGameLoop();
+            setCurrentScene(scenes.getFirst());
+
         }
 
         public static void setCurrentMenu(Menu menu) {
@@ -120,7 +121,10 @@
                             KeybindRegistry.registry.handleKeyHeld(keyCode);
                         }
                     }
-                    currentScene.update();
+                    if (currentScene.initalized)
+                    {
+                        currentScene.update();
+                    }
                 }
                 for (Mod mod : ModLoader.mods) {
                     mod.update();
@@ -169,6 +173,10 @@
 
         // Method for scene management
         public static void setCurrentScene(Scene scene) {
+            if (!scene.initalized)
+            {
+                scene.init();
+            }
             currentScene = scene;
         }
 
