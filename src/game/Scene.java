@@ -54,6 +54,16 @@ public class Scene {
         init();
     }
 
+    public void setTile(Tile tileToSet, int id, int doorToLevel) {
+        for (Tile tile : currentTiles.tiles) {
+            if (tile.row == tileToSet.row && tile.column == tileToSet.column) {
+                tile.ID = id;
+                tile.doorToLevel = doorToLevel;
+                break;
+            }
+        }
+    }
+
     public int getSpawnX() {
         return spawnX;
     }
@@ -102,7 +112,26 @@ public class Scene {
         } while (intersects);
 
         return new int[]{x, y};
+    }
 
+    public Tile getTileInCoordinate(int x, int y)
+    {
+        // Convert pixel coordinates to tile coordinates
+        int column = x / currentTiles.getHeight();  // Assuming each tile is 32x32 pixels
+        int row = y / currentTiles.getWidth();
+
+        // Ensure column and row are within bounds
+        if (column < 0 || column >= currentTiles.getColumnCount() || row < 0 || row >= currentTiles.getRowCount()) {
+            return null;  // Out of bounds
+        }
+
+        // Get the tile at the calculated column and row
+        return currentTiles.getTile(column, row);
+    }
+
+    public Tile getRandomTileInMap() {
+        int[] coords = getRandomCoordsInMap();
+        return getTileInCoordinate(coords[0], coords[1]);
     }
 
     private void init() {

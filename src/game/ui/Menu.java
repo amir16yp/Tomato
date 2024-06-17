@@ -51,21 +51,20 @@ public class Menu extends UIElement implements MouseMotionListener, MouseListene
 
     public static void registerKeybinds()
     {
-        boolean visible = Screen.currentMenu.isVisible() && Screen.isPaused;
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_UP, () -> {
-            if (visible)
+            if (Screen.currentMenu.isVisible() && Screen.isPaused)
             {
                 Screen.currentMenu.Up();
             }
         });
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_DOWN, () -> {
-            if (visible)
+            if (Screen.currentMenu.isVisible() && Screen.isPaused)
             {
                 Screen.currentMenu.Down();
             }
         });
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_ENTER, () -> {
-            if (visible)
+            if (Screen.currentMenu.isVisible() && Screen.isPaused)
             {
                 Screen.currentMenu.selectOption();
             }

@@ -38,15 +38,6 @@ public class PlayerEntity extends Entity {
         this.setMoveSpeed(3);
     }
 
-    public Direction getCurrentDirection()
-    {
-        if (playerDirection == null)
-        {
-            playerDirection = Direction.getRandomDirection();
-        }
-        return playerDirection;
-    }
-
     public void update() {
         super.update();
         switch (getCurrentDirection()) {
@@ -141,6 +132,7 @@ public class PlayerEntity extends Entity {
 
     private static void moveWrap(Direction direction, boolean unPause)
     {
+        getPlayer().currentDirection = direction;
         getPlayer().move(direction, unPause);
     }
 
@@ -155,20 +147,5 @@ public class PlayerEntity extends Entity {
         pauseAllAnimationByindex(0);
     }
 
-    public void setInDialogue(boolean inDialogue)
-    {
-        this.isInDialogue = inDialogue;
-    }
-
-    public void updateDialogueState()
-    {
-        setInDialogue(getActionDialogue().isVisible());
-    }
-
-    public void handleKeyReleased(int keyCode) {
-        switch (keyCode) {
-            case KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A -> stopPlayerMoving();
-        }
-    }
 
 }

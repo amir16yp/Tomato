@@ -6,7 +6,10 @@ import java.awt.*;
 
 public class UIElement
 {
-    private final int x, y, width, height;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
     private boolean visible;
     private static int totalElementCount = 0;
     public final Logger logger = new Logger(this.getClass().getName());
@@ -56,6 +59,8 @@ public class UIElement
         return this.visible;
     }
 
+
+
     public void update()
     {
 
@@ -66,4 +71,21 @@ public class UIElement
 
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
 }

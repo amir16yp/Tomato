@@ -3,7 +3,7 @@ package game;
 public class Tile {
     public final int column;
     public final int row;
-    public final int ID;
+    public int ID;
     public boolean isSolid;
     public int doorToLevel;
 
