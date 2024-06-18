@@ -143,11 +143,12 @@ public class Scene {
         logger.Log("initializing");
         DialogueBox dialogueBox = new DialogueBox(Color.black, Color.white, Font.getFont(Font.MONOSPACED), 50, false, 200);
         this.uiElements.add(dialogueBox);
+        PlayerEntity.inventory.getHotbarUI().setVisible(true);
         this.uiElements.add(PlayerEntity.inventory.getHotbarUI());
         // make sure to adjust internal resolution to a resolution divisible by the tile width and height
         this.currentTiles = new Tiles(tileIdPath, tilePath, 32, 32, this.resourceLoader);
         playerEntity.setPosition(spawnX, spawnY);
-        this.entityList.add(playerEntity);
+        //this.entityList.add(playerEntity);
 
         for (Tile tile : currentTiles.tiles) {
             if (tile.isSolid) {
@@ -170,6 +171,7 @@ public class Scene {
                 element.update();
             }
         }
+        playerEntity.update();
         for (Entity entity : entityList) {
             entity.update();
         }
@@ -185,36 +187,42 @@ public class Scene {
         }
         pickupItemList.removeAll(itemsToRemove);
     }
+
     public void draw(Graphics2D g2d) {
-        // Create an off-screen image to render the scene
+        // Draw the scene components to an off-screen image
         BufferedImage sceneImage = new BufferedImage(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D sceneGraphics = sceneImage.createGraphics();
 
-        // Render scene components to the off-screen image (back to front)
-        currentTiles.draw(sceneGraphics);
+        // Render tiles and lighting effects
+        currentTiles.draw(sceneGraphics); // Draw tiles
+        lighting.drawLighting(sceneGraphics, sceneImage); // Apply lighting effects
 
-        // Draw entities (order might be important within entities)
+        // Draw entities (e.g., monsters, player)
         for (Entity entity : entityList) {
-            entity.draw(sceneGraphics);
+            entity.draw(sceneGraphics); // Draw entity
         }
 
         // Draw pickup items
         for (PickupItem item : pickupItemList) {
-            item.draw(sceneGraphics);
+            item.draw(sceneGraphics); // Draw pickup item
         }
 
-        lighting.drawLighting(sceneGraphics, playerEntity, sceneImage);
-        lighting.drawLightSources(g2d);
-        // Draw the final scene image to the screen
+        // Draw player entity last to ensure it's on top
+        playerEntity.draw(sceneGraphics); // Draw player entity
+
+        // Draw darkness overlay
+        lighting.drawDarkness(sceneGraphics, sceneImage);
+
+        // Draw the final scene image onto the screen
         g2d.drawImage(sceneImage, 0, 0, null);
 
         // Dispose of the off-screen graphics object
         sceneGraphics.dispose();
-        for (UIElement uiElement : this.uiElements)
-        {
-            if (uiElement.isVisible())
-            {
-                uiElement.draw(g2d);
+
+        // Draw UI elements directly on the main graphics context
+        for (UIElement uiElement : uiElements) {
+            if (uiElement.isVisible()) {
+                uiElement.draw(g2d); // Draw UI element
             }
         }
     }

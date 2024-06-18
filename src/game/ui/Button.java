@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-public class    Button extends UIElement {
+public class Button extends UIElement {
     private String text;
     private final Color textColor;
     private final Color backgroundColor;
