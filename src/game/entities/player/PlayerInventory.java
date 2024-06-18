@@ -69,18 +69,30 @@ public class PlayerInventory
         }
     }
 
+    public void removeItem(Item item)
+    {
+        int slot = 0;
+        for (Item slotItem : items)
+        {
+            if (slotItem != null)
+            {
+                if (slotItem == item)
+                {
+                    clearSlot(slot);
+                }
+            }
 
-
-
+            slot++;
+        }
+    }
 
     public void useItem()
     {
         int slot = 0;
         for (Item item : items)
         {
-            if (item != null)
-            {
-                if (item.getUses() < item.getMaxUsages() && item == getCurrentItem() && System.currentTimeMillis() - item.lastUsedTime >= item.cooldownTime) { // Check if there are any uses left
+            if (item != null && item == getCurrentItem() && System.currentTimeMillis() - item.lastUsedTime >= item.cooldownTime) {
+                if (item.getUses() < item.getMaxUsages()) {
                     item.use();
                     hotbarUI.setItemSprite(slot, item.getSprite(), item.getMaxUsages() - item.getUses());
                 }
@@ -88,6 +100,8 @@ public class PlayerInventory
             slot++;
         }
     }
+
+
 
     public Item getCurrentItem() {
         return currentItem;

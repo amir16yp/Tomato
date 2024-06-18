@@ -9,6 +9,8 @@
 
     import game.entities.player.PlayerEntity;
     import game.input.KeybindRegistry;
+    import game.items.Item;
+    import game.items.PickupItem;
     import game.ui.*;
     import game.ui.Menu;
     import game.ui.SplashScreen;
@@ -123,6 +125,13 @@
                     }
                     if (currentScene.initalized)
                     {
+                        for (Item item : PlayerEntity.inventory.items)
+                        {
+                            if (item != null)
+                            {
+                                item.update();
+                            }
+                        }
                         currentScene.update();
                     }
                 }

@@ -21,6 +21,29 @@ public class Item
     {
         uses++;
         lastUsedTime = System.currentTimeMillis();
+
+        if (uses == maxUsages)
+        {
+            onRunOut();
+        }
+    }
+
+    private boolean hasRunOutPerformed = false;
+
+    public void onRunOut()
+    {
+        if (!hasRunOutPerformed) {
+            // Perform action when item runs out of uses
+            // Example: System.out.println("Item " + this.getClass().getName() + " has run out of uses.");
+
+            // Set the flag to true so that this action is performed only once
+            hasRunOutPerformed = true;
+        }
+    }
+
+    public void update()
+    {
+        sprite.update();
     }
 
     public Sprite getSprite() {
