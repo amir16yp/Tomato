@@ -14,7 +14,7 @@
         public static int WIDTH = INTERNAL_WIDTH;
         public static int HEIGHT = INTERNAL_HEIGHT;
         public static final ResourceLoader defaultResourceLoader = new DefaultResourceLoader();
-
+        public static final boolean FLAT = false; // FLAT MODE IS VERY EARLY STAGE. TOP DOWN GAMES ARE BETTER ANYWAY
         public void setResolution(int width, int height) {
             WIDTH = width;
             HEIGHT = height;

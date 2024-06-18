@@ -60,6 +60,10 @@ public class Entity {
         }
     }
 
+    private void applyGravity() {
+        velocityY += 0.5; // Example gravity effect, adjust as needed
+    }
+
     public Direction getCurrentDirection() {
         return currentDirection;
     }
@@ -80,7 +84,6 @@ public class Entity {
         }
     }
 
-    // Update the current sprite
     public void update() {
         hitbox.y = y;
         hitbox.x = x;
@@ -90,6 +93,11 @@ public class Entity {
         updatePosition();
         updateProjectiles();
         healthBar.setCurrentHealth((int) hp);
+
+        // Apply gravity if not flat
+        if (Game.FLAT) {
+            applyGravity();
+        }
     }
 
     public void updateProjectiles() {
@@ -149,18 +157,35 @@ public class Entity {
 
 
     public void move(Direction direction, boolean unPause) {
-        this.currentDirection = direction;
-        if (unPause) {
-            unPauseAnimation();
+        if (Game.FLAT) {
+            // If flat is true, restrict movement to left and right directions
+            if (direction == Direction.LEFT || direction == Direction.RIGHT) {
+                this.currentDirection = direction;
+                if (unPause) {
+                    unPauseAnimation();
+                }
+                // Calculate the displacement based on the move speed and direction
+                double displacementX = direction.getDeltaX() * moveSpeed;
+                double displacementY = direction.getDeltaY() * moveSpeed;
+                // Update the entity's velocity
+                velocityX = displacementX;
+                velocityY = displacementY;
+            }
+        } else {
+            // Default behavior for non-flat movement
+            this.currentDirection = direction;
+            if (unPause) {
+                unPauseAnimation();
+            }
+            // Calculate the displacement based on the move speed and direction
+            double displacementX = direction.getDeltaX() * moveSpeed;
+            double displacementY = direction.getDeltaY() * moveSpeed;
+            // Update the entity's velocity
+            velocityX = displacementX;
+            velocityY = displacementY;
         }
-        // Calculate the displacement based on the move speed and direction
-        double displacementX = direction.getDeltaX() * moveSpeed;
-        double displacementY = direction.getDeltaY() * moveSpeed;
-        // Update the entity's velocity
-        velocityX = displacementX;
-        velocityY = displacementY;
-
     }
+
 
     private boolean checkCollision(int newX, int newY) {
         Rectangle proposedHitbox = new Rectangle(newX, newY, hitbox.width, hitbox.height);

@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class Sprite {
@@ -20,7 +22,9 @@ public class Sprite {
     private final int height;
     private final Logger logger = new Logger(this.getClass().getName());
     private ResourceLoader resourceLoader = Game.defaultResourceLoader;
+    private String path;
     public Sprite(String path, int tileWidth, int tileHeight, int animationInterval, ResourceLoader resourceLoader) {
+        this.path = path;
         logger.addPrefix(path);
         this.animationInterval = animationInterval;
         if (resourceLoader == null)
@@ -58,7 +62,12 @@ public class Sprite {
         isPaused = false; // Initialize as not paused
         width = tileWidth;
         height = tileHeight;
+    }
 
+    public String getName()
+    {
+        Path filePath  = Paths.get(this.path);
+        return filePath.getFileName().toString();
     }
 
     public void draw(Graphics g, int x, int y) {

@@ -8,7 +8,7 @@ public class Logger {
     private String className;
     private String prefix = "";
     public static LogWindow logWindow = new LogWindow();
-
+    public static boolean useConsoleColors = true;
     public Logger(String className) {
         this.className = "[" + className + "] ";
     }
@@ -18,7 +18,12 @@ public class Logger {
     }
 
     public void Log(String msg) {
-        String o = Utils.ConsoleColors.WHITE + this.className + this.prefix + msg + Utils.ConsoleColors.RESET;
+        String o = this.className + this.prefix + msg;
+        if (useConsoleColors)
+        {
+            o = Utils.ConsoleColors.WHITE + o + Utils.ConsoleColors.RESET;
+
+        }
         System.out.println(o);
         logWindow.appendLog(o);
     }
@@ -29,16 +34,24 @@ public class Logger {
         logWindow.setVisible(true);
     }
 
-    public void Error(String msg) {
-        String o = Utils.ConsoleColors.RED + this.className + this.prefix + " [ERROR] " + msg;
+    public void Error(String msg)
+    {
+        String o =  this.className + this.prefix + " [ERROR] " + msg;
+        if (useConsoleColors)
+        {
+            o = Utils.ConsoleColors.RED + o + Utils.ConsoleColors.RESET;
+        }
         System.out.println(o);
         logWindow.appendLog(o);
         popOnError();
     }
 
     public void Error(Exception err) {
-        String o = Utils.ConsoleColors.RED + this.className + this.prefix + " [ERROR]\n";
-
+        String o =  this.className + this.prefix + " [ERROR]\n";
+        if (useConsoleColors)
+        {
+            o = Utils.ConsoleColors.RED + o;
+        }
         // Concatenate stack trace elements into a multiline string
         StringBuilder stackTraceBuilder = new StringBuilder();
         stackTraceBuilder.append(err.getMessage());

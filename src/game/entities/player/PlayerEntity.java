@@ -64,8 +64,11 @@ public class PlayerEntity extends Entity {
     }
 
     public static void registerKeybinds() {
-        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_W, () -> moveWrap(Direction.UP, true));
-        KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_S, () -> moveWrap(Direction.DOWN, true));
+        if (!Game.FLAT)
+        {
+            KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_W, () -> moveWrap(Direction.UP, true));
+            KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_S, () -> moveWrap(Direction.DOWN, true));
+        }
         KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_D, () -> moveWrap(Direction.RIGHT, true));
         KeybindRegistry.registry.registerKeyHeldAction(KeyEvent.VK_A, () -> moveWrap(Direction.LEFT, true));
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_SPACE, () -> inventory.useItem());

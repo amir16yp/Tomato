@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lighting {
+public class    Lighting {
     private int playerRadius = 32 * 5;
     private Color playerSourceColor = new Color(255, 255, 200, 128);
     private boolean drawPlayerSource = false;

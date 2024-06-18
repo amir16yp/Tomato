@@ -23,6 +23,16 @@ public enum Direction {
         return directions[index];
     }
 
+    public static Direction getRandomHorizontalDirection()
+    {
+        Direction[] directions = new Direction[]
+                {
+                  LEFT, RIGHT
+                };
+        int index = random.nextInt(directions.length);
+        return directions[index];
+    }
+
     public int getDeltaX() {
         return deltaX;
     }
