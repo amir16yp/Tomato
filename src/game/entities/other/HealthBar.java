@@ -3,7 +3,7 @@ package game.entities.other;
 import java.awt.*;
 
 public class HealthBar {
-    private final int maxHealth;
+    private int maxHealth;
     private final int width;
     private final int height;
     private final Color backgroundColor = Color.GRAY;
@@ -17,6 +17,11 @@ public class HealthBar {
         this.height = height;
         this.healthColor = Color.GREEN;
     }
+
+     public void setMaxHealth(int maxHealth)
+     {
+         this.maxHealth = maxHealth;
+     }
 
     public void setCurrentHealth(int health) {
         this.currentHealth = Math.max(0, Math.min(health, this.maxHealth)); // Ensure health is within bounds

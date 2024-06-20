@@ -14,6 +14,7 @@ import javax.script.ScriptEngine;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -61,7 +62,7 @@ public class Scene {
         init();
     }
 
-    public void setTile(Tile tileToSet, int id, int doorToLevel) {
+    public void setTile(Tile tileToSet, int id) {
         for (Tile tile : currentTiles.getTiles()) {
             if (tile.row == tileToSet.row && tile.column == tileToSet.column) {
                 tile.ID = id;
@@ -107,10 +108,10 @@ public class Scene {
         boolean intersects;
         do {
             // Generate random coordinates
-            x = random.nextInt(Game.WIDTH);
-            y = random.nextInt(Game.HEIGHT);
+            x = random.nextInt(Game.INTERNAL_WIDTH);
+            y = random.nextInt(Game.INTERNAL_HEIGHT);
 
-            // Create a rectangle representing the candidate point
+                // Create a rectangle representing the candidate point
             candidateRect = new Rectangle(x, y, 1, 1);
 
             // Check if the candidate rectangle intersects with any of the rectangles in the list
@@ -247,11 +248,12 @@ public class Scene {
         }
     }
 
-    public void disposeEntities(List<Entity> entities)
-    {
-        for (Entity entity : entities)
-        {
+    public void disposeEntities(List<Entity> entities) {
+        Iterator<Entity> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+            Entity entity = iterator.next();
             entity.dispose();
+            iterator.remove(); // Use the iterator's remove method to avoid ConcurrentModificationException
         }
     }
 

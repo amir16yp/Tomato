@@ -61,4 +61,8 @@ public class Item
     public int getMaxUsages() {
         return maxUsages;
     }
+
+    public void setMaxUsages(int maxUsages) {
+        this.maxUsages = maxUsages;
+    }
 }

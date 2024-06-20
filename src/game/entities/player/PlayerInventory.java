@@ -107,17 +107,42 @@ public class PlayerInventory
         return currentItem;
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item newItem) {
         for (int i = 0; i < items.length; i++) {
-            if (items[i] == null) { // Find the first empty slot in the inventory
-                items[i] = item; // Add the item to the empty slot
-                hotbarUI.setItemSprite(i, item.getSprite(), item.getMaxUsages() - item.getUses()); // Update the hotbar UI
-                logger.Log("Added " + item.getClass().getName() + " to inventory at slot " + i);
-                return; // Exit the loop after adding the item
+            Item existingItem = items[i];
+            if (existingItem != null && existingItem.getClass() == newItem.getClass() && existingItem.getUses() < existingItem.getMaxUsages()) {
+                // Merge the uses and maxUsages of newItem into the existing item
+                existingItem.setMaxUsages(existingItem.getMaxUsages() + newItem.getMaxUsages());
+                int remainingCapacity = existingItem.getMaxUsages() - existingItem.getUses();
+                int transferAmount = Math.min(remainingCapacity, newItem.getUses());
+
+                existingItem.setUses(existingItem.getUses() + transferAmount);
+                newItem.setUses(newItem.getUses() - transferAmount);
+
+                hotbarUI.setItemSprite(i, existingItem.getSprite(), existingItem.getMaxUsages() - existingItem.getUses()); 
+                // If newItem uses have been transferred completely, exit the method
+                if (newItem.getUses() == 0) {
+                    return;
+                }
             }
         }
-        logger.Log("Inventory is full. Cannot add item: " + item.getClass().getName());
+
+        // If stacking wasn't possible or newItem still has remaining uses, add it to an empty slot
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == null) {
+                items[i] = newItem;
+                hotbarUI.setItemSprite(i, newItem.getSprite(), newItem.getMaxUsages() - newItem.getUses());
+                logger.Log("Added " + newItem.getClass().getName() + " to inventory at slot " + i);
+                return;
+            }
+        }
+
+        // If the inventory is full and newItem couldn't be stacked completely, log an error
+        if (newItem.getUses() > 0) {
+            logger.Log("Inventory is full. Cannot add item: " + newItem.getClass().getName() + " with " + newItem.getUses() + " remaining uses.");
+        }
     }
+
 
     public Hotbar getHotbarUI() {
         return hotbarUI;

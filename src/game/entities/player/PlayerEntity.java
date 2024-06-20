@@ -6,6 +6,7 @@ import game.Screen;
 import game.Sprite;
 import game.entities.Door;
 import game.entities.Entity;
+import game.entities.John;
 import game.entities.NPC;
 import game.entities.enemy.Zombie;
 import game.registry.KeybindRegistry;
@@ -13,6 +14,7 @@ import game.items.*;
 import game.ui.DialogueBox;
 import org.w3c.dom.ranges.DocumentRange;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class PlayerEntity extends Entity {
@@ -21,11 +23,11 @@ public class PlayerEntity extends Entity {
     public static DialogueBox getActionDialogue() {
         return (DialogueBox) Screen.getCurrentScene().uiElements.get(0);
     }
-    private boolean isInDialogue = false;
     public static final Item[] starterItems = new Item[10];
     static {
         starterItems[0] = new Gun();
         starterItems[1] = new Sword();
+        starterItems[2] = new HealPotion(5);
     }
     public static PlayerInventory inventory = new PlayerInventory(starterItems);
     public PlayerEntity() {
@@ -99,12 +101,13 @@ public class PlayerEntity extends Entity {
                 }
             }
         });
-        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_Z, () ->  {
-            Screen.getCurrentScene().spawnTileEntity(new Door(Screen.scenes.get(1)), 50, 50);
+
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_Z, () -> {
+            getPlayer().flash(2000, 50, Color.RED);
         });
 
         KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_C, () -> {
-            System.out.println(getPlayer().distanceTo(Screen.getCurrentScene().tileEntitiesList.getFirst()));
+            System.out.println(getPlayer().getCurrentX() + "," + getPlayer().getCurrentY());
         });
 
         KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_W, PlayerEntity::stopPlayerMovingWrap);

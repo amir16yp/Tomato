@@ -11,12 +11,6 @@ public class NPC extends Entity{
     public NPC(String name, DialogueNode defaultDialogue) {
         super(name);
         this.defaultDialogue = defaultDialogue;
-        // temporary
-        this.addSprite("north", new Sprite("sprites/zombie/walk_north.png", 32, 32, 100, Game.defaultResourceLoader));
-        this.addSprite("east", new Sprite("sprites/zombie/walk_east.png", 32, 32, 100, Game.defaultResourceLoader));
-        this.addSprite("west", new Sprite("sprites/zombie/walk_west.png", 32, 32, 100, Game.defaultResourceLoader));
-        this.addSprite("south", new Sprite("sprites/zombie/walk_south.png", 32, 32, 100, Game.defaultResourceLoader));
-        this.setCurrentSprite("south");
     }
 
     public DialogueNode interaction()

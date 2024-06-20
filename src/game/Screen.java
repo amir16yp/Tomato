@@ -23,11 +23,11 @@
         public static final int TARGET_FRAME_TIME = 30;
         public static Logger logger = new Logger(Screen.class.getName());
         public static boolean isPaused = true;
-        SplashScreen splashScreen = new SplashScreen(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png", SplashType.FADE_OUT );
+        public SplashScreen splashScreen = new SplashScreen(Game.INTERNAL_WIDTH, Game.INTERNAL_HEIGHT, Game.defaultResourceLoader, "/game/sprites/splash.png", SplashType.FADE_OUT );
 
         static {
             // Initial scenes
-            scenes.add(new Scene("tileid.csv", "level.csv", 320, 320, Game.defaultResourceLoader));
+            scenes.add(new Scene("tileid.csv", "level.csv", 64, 64, Game.defaultResourceLoader));
             scenes.add(new Scene("tileid.csv", "level2.csv", 320, 320, Game.defaultResourceLoader));
         }
 

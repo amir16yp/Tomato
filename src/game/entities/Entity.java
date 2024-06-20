@@ -6,10 +6,8 @@ import game.entities.other.Projectile;
 import game.items.PickupItem;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Entity {
     private final Map<String, Sprite> sprites;
@@ -23,20 +21,37 @@ public class Entity {
     public double velocityX; // Horizontal velocity of the entity
     public double velocityY; // Vertical velocity of the entity
     public double hp = 100.0;
-    public Rectangle hitbox;
+    public int maxHP = 100;
     public Tile currerntTile;
     private Sprite currentSprite;
     private int x; // Current x-coordinate of the entity
     private int y; // Current y-coordinate of the entity
     public Direction currentDirection;
+    private boolean drawHitbox = false;
+    private long flashDuration;
+    private long flashSwitchDelay;
+    private Color flashColor;
+    private boolean flashing;
+    private boolean showSprite = true; // Flag to toggle between sprite and hitbox fill
+    private Timer flashTimer; // Timer for controlling the flashing effect
+    private long startFlashTime;
+
+
     public final Logger logger = new Logger(this.getClass().getName());
     public Entity(String name) {
         logger.addPrefix(name);
         this.name = name;
         sprites = new HashMap<>();
-        hitbox = new Rectangle(getCurrentX(), getCurrentY(), 32, 32);
-        healthBar = new HealthBar(100, 20, 5);
+        healthBar = new HealthBar(maxHP, 20, 5);
         currentDirection = Direction.getRandomDirection();
+    }
+
+    public boolean isDrawHitbox() {
+        return drawHitbox;
+    }
+
+    public void setDrawHitbox(boolean drawHitbox) {
+        this.drawHitbox = drawHitbox;
     }
 
     public Sprite getCurrentSprite() {
@@ -74,9 +89,26 @@ public class Entity {
     }
 
     // Draw the entity at its current position
+
+    // Draw the entity at its current position
     public void draw(Graphics g) {
         if (currentSprite != null) {
-            currentSprite.draw(g, x, y);
+            if (flashing) {
+                if (showSprite) {
+                    currentSprite.draw(g, x, y);
+                } else {
+                    g.setColor(flashColor);
+                    g.drawPolygon(currentSprite.getHitbox());
+                }
+            } else {
+                currentSprite.draw(g, x, y);
+                if (drawHitbox) {
+                    Polygon hitbox = currentSprite.getHitbox();
+                    g.setColor(Color.RED); // Set color for the polyline outline
+                    // Draw the polyline connecting all points
+                    g.drawPolygon(hitbox);
+                }
+            }
         }
         drawProjectiles(g);
         if (this.healthBarVisible) {
@@ -84,9 +116,43 @@ public class Entity {
         }
     }
 
+    public void flash(long durationMs, long flashSwitchDelay, Color color) {
+        if (flashing) {
+            // Flashing is already active, cancel previous timer
+            flashTimer.cancel();
+        }
+
+        this.flashDuration = durationMs;
+        this.flashSwitchDelay = flashSwitchDelay;
+        this.flashColor = color;
+        this.flashing = true;
+        this.showSprite = true;
+        this.startFlashTime = System.currentTimeMillis();
+
+        flashTimer = new Timer();
+        flashTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                showSprite = !showSprite; // Toggle between sprite and hitbox fill
+                if (System.currentTimeMillis() - startFlashTime >= durationMs) {
+                    flashing = false;
+                    showSprite = true; // Ensure sprite is shown after flashing ends
+                    flashTimer.cancel(); // Cancel the flashing timer
+                }
+            }
+        }, 0, flashSwitchDelay);
+    }
+
+    // Cancel the flashing effect
+    public void stopFlash() {
+        if (flashing) {
+            flashTimer.cancel();
+            flashing = false;
+            showSprite = true; // Ensure sprite is shown after flashing ends
+        }
+    }
+
     public void update() {
-        hitbox.y = y;
-        hitbox.x = x;
         if (currentSprite != null) {
             currentSprite.update();
         }
@@ -187,24 +253,31 @@ public class Entity {
         }
     }
 
-    private void doTileEntityActions()
-    {
-        for (TileEntity tileEntity : Screen.getCurrentScene().tileEntitiesList)
-        {
-            if (tileEntity.action != null)
-            {
-                if (distanceTo(tileEntity) <= tileEntity.distanceToAction)
-                {
+    public void doTileEntityActions() {
+        for (TileEntity tileEntity : Screen.getCurrentScene().tileEntitiesList) {
+            if (tileEntity.action != null && distanceTo(tileEntity) <= tileEntity.distanceToAction) {
+                // Check if the tileEntity's targetType matches the current entity's class
+                if (tileEntity.getTargetType().isInstance(this)) {
+                    tileEntity.setEntityInteractingWith(this);
                     tileEntity.action.run();
                 }
             }
-
         }
     }
 
 
-    private boolean checkCollision(int newX, int newY) {
-        Rectangle proposedHitbox = new Rectangle(newX, newY, hitbox.width, hitbox.height);
+    public boolean checkCollision(int newX, int newY) {
+        // Get the current sprite's hitbox
+        Polygon currentHitbox = currentSprite.getHitbox();
+
+        // Calculate the proposed hitbox based on the new position
+        int width = currentHitbox.getBounds().width;
+        int height = currentHitbox.getBounds().height;
+        int[] xPoints = {newX, newX + width, newX + width, newX};
+        int[] yPoints = {newY, newY, newY + height, newY + height};
+        Polygon proposedHitbox = new Polygon(xPoints, yPoints, 4);
+
+        // Check for collision with the scene boundaries or walls.
         for (Rectangle boundary : Screen.getCurrentScene().boundaries) {
             if (proposedHitbox.intersects(boundary)) {
                 return true; // Collision detected with a boundary
@@ -212,6 +285,7 @@ public class Entity {
         }
         return false; // No collision with any boundaries
     }
+
 
     public int getCenterX() {
         return x + currentSprite.getWidth() / 2;
@@ -230,7 +304,6 @@ public class Entity {
 
     // Update the entity's position based on its velocity
     public void updatePosition() {
-
 
         int proposedX = (int) (x + velocityX);
         int proposedY = (int) (y + velocityY);
@@ -264,11 +337,11 @@ public class Entity {
         }
 
         // Create a proposed hitbox that represents where the entity's hitbox would be if it moved in the current direction.
-        Rectangle proposedHitbox = new Rectangle(x + offsetX, y + offsetY, hitbox.width, hitbox.height);
+        Polygon hitbox = currentSprite.getHitbox(); //new Rectangle(x + offsetX, y + offsetY, hitbox.width, hitbox.height);
 
         // Check for collision with the scene boundaries or walls.
         for (Rectangle boundary : Screen.getCurrentScene().boundaries) {
-            if (proposedHitbox.intersects(boundary)) {
+            if (hitbox.intersects(boundary)) {
                 return true; // The entity is directly facing a wall or boundary.
             }
         }
@@ -353,7 +426,24 @@ public class Entity {
         if (this.hp <= 0.0) {
             this.hp = 0;
             die();
+        } else {
+            this.flash(100, 30, Color.RED);
         }
+    }
+
+    public void heal(int amount)
+    {
+        this.hp += amount;
+        if (this.hp > maxHP)
+        {
+            this.hp = maxHP;
+        }
+    }
+
+    public void setMaxHP(int amount)
+    {
+        this.maxHP = amount;
+        this.healthBar.setMaxHealth(amount);
     }
 
     public void dispose()

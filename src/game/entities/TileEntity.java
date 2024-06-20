@@ -9,17 +9,20 @@ public class TileEntity {
     private final Sprite[][] spriteMatrix;
     private final int rows;
     private final int columns;
-    private final Logger logger ;
+    private final Logger logger;
     private int x;
     private int y;
     public double distanceToAction = 8.0;
     public Runnable action;
+    private Entity entityInteractingWith;
+    private Class<? extends Entity> targetType; // Type of entity this TileEntity targets
 
-    public TileEntity(Sprite[][] spriteMatrix) {
+    public TileEntity(Sprite[][] spriteMatrix, Class<? extends Entity> targetType) {
         this.spriteMatrix = spriteMatrix;
         this.rows = spriteMatrix.length;
         this.columns = spriteMatrix[0].length;
         this.logger = new Logger(this.getClass().getName());
+        this.targetType = targetType;
     }
 
     public void update() {
@@ -51,6 +54,14 @@ public class TileEntity {
                 }
             }
         }
+    }
+
+    public Entity getEntityInteractingWith() {
+        return entityInteractingWith;
+    }
+
+    public void setEntityInteractingWith(Entity entityInteractingWith) {
+        this.entityInteractingWith = entityInteractingWith;
     }
 
     public Polygon getBoundary() {
@@ -93,4 +104,13 @@ public class TileEntity {
     public int getY() {
         return y;
     }
+
+    public void setTargetType(Class<? extends Entity> targetType) {
+        this.targetType = targetType;
+    }
+
+    public Class<? extends Entity> getTargetType() {
+        return targetType;
+    }
+
 }

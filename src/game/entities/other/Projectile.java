@@ -63,7 +63,7 @@ public class Projectile {
         Rectangle proposedHitbox = new Rectangle(x, y, this.sprite.getWidth(), this.sprite.getHeight());
 
         for (Entity entity : Screen.getCurrentScene().entityList) {
-            if (entity.hitbox.intersects(proposedHitbox) && entity != getShooter()) {
+            if (entity.getCurrentSprite().getHitbox().intersects(proposedHitbox) && entity != getShooter()) {
                 entity.takeDamage(getDamageAmount());
                 deactivate();
                 return;

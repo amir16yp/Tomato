@@ -11,18 +11,15 @@
     public class    Game extends JFrame {
         public static Screen screen = new Screen();
         public static Game instance = new Game();
-        public static final int INTERNAL_WIDTH = 768;
+            public static final int INTERNAL_WIDTH = 768;
         public static final int INTERNAL_HEIGHT = 576;
         public static int WIDTH = INTERNAL_WIDTH;
         public static int HEIGHT = INTERNAL_HEIGHT;
         public static final ResourceLoader defaultResourceLoader = new DefaultResourceLoader();
-        public static final boolean FLAT = false; // FLAT MODE IS VERY EARLY STAGE. TOP DOWN GAMES ARE BETTER ANYWAY
+        public static final boolean FLAT = false    ; // FLAT MODE IS VERY EARLY STAGE. TOP DOWN GAMES ARE BETTER ANYWAY
         public void setResolution(int width, int height) {
             WIDTH = width;
             HEIGHT = height;
-
-            // Calculate the scale factor based on the new resolution
-            //SCALE_FACTOR = Math.min(WIDTH / ORIGINAL_WIDTH, HEIGHT / ORIGINAL_HEIGHT);
 
             setSize(WIDTH, HEIGHT);
             this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -34,10 +31,7 @@
         }
 
         public Game() {
-            setResolution(1280  , 960); // Adjusted resolution
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            //setResolution(800 * 2, 600 * 2);
-            //setSize(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
             setTitle("Tomato");
             setResizable(false);
             add(screen);

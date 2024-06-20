@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Sprite {
@@ -23,6 +24,7 @@ public class Sprite {
     private final Logger logger = new Logger(this.getClass().getName());
     private ResourceLoader resourceLoader = Game.defaultResourceLoader;
     private String path;
+
     public Sprite(String path, int tileWidth, int tileHeight, int animationInterval, ResourceLoader resourceLoader) {
         this.path = path;
         logger.addPrefix(path);
@@ -64,6 +66,51 @@ public class Sprite {
         height = tileHeight;
     }
 
+
+    public Polygon getHitbox() {
+        java.util.List<Point> hitboxPoints = getHitboxPoints();
+        if (hitboxPoints == null || hitboxPoints.isEmpty()) {
+            return null; // No hitbox points available
+        }
+
+        // Create a polygon to hold the hitbox vertices
+        Polygon polygon = new Polygon();
+
+        // Add all points from hitboxPoints to the polygon
+        for (Point point : hitboxPoints) {
+            polygon.addPoint(point.x + x, point.y + y);
+        }
+
+        return polygon;
+    }
+
+    public   java.util.List<Point>getHitboxPoints() {
+        BufferedImage currentFrameImage = tiles[currentFrame];
+        if (currentFrameImage == null) {
+            return null; // No current frame image loaded
+        }
+
+        int imageWidth = currentFrameImage.getWidth();
+        int imageHeight = currentFrameImage.getHeight();
+
+        java.util.List<Point> points = new ArrayList<>();
+
+        // Iterate through each pixel of the current frame image
+        for (int y = 0; y < imageHeight; y++) {
+            for (int x = 0; x < imageWidth; x++) {
+                // Get the alpha (transparency) value of the pixel
+                int alpha = (currentFrameImage.getRGB(x, y) >> 24) & 0xFF;
+
+                // If alpha is high enough, consider it part of the hitbox
+                if (alpha >= 128) { // Adjust this threshold as needed
+                    // Add this point to the list of hitbox points
+                    points.add(new Point(x, y));
+                }
+            }
+        }
+
+        return points;
+    }
     public String getName()
     {
         Path filePath  = Paths.get(this.path);
