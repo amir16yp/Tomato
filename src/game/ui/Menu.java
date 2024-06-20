@@ -1,17 +1,13 @@
 package game.ui;
 
-import game.Game;
-import game.Logger;
 import game.Screen;
-import game.input.KeybindRegistry;
+import game.registry.KeybindRegistry;
 
-import javax.script.ScriptEngine;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 

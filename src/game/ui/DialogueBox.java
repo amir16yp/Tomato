@@ -3,14 +3,12 @@ package game.ui;
 import game.dialogue.DialogueNode;
 import game.dialogue.DialogueOption;
 import game.entities.player.PlayerEntity;
-import game.input.KeybindRegistry;
+import game.registry.KeybindRegistry;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.security.Key;
 import java.util.List;
 
 public class DialogueBox extends UIElement {

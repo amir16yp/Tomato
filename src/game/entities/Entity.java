@@ -98,6 +98,7 @@ public class Entity {
         if (Game.FLAT) {
             applyGravity();
         }
+        doTileEntityActions();
     }
 
     public void updateProjectiles() {
@@ -183,6 +184,21 @@ public class Entity {
             // Update the entity's velocity
             velocityX = displacementX;
             velocityY = displacementY;
+        }
+    }
+
+    private void doTileEntityActions()
+    {
+        for (TileEntity tileEntity : Screen.getCurrentScene().tileEntitiesList)
+        {
+            if (tileEntity.action != null)
+            {
+                if (distanceTo(tileEntity) <= tileEntity.distanceToAction)
+                {
+                    tileEntity.action.run();
+                }
+            }
+
         }
     }
 
@@ -309,6 +325,22 @@ public class Entity {
         double dy = otherEntity.getCurrentY() - this.getCurrentY();
         return Math.sqrt(dx * dx + dy * dy);
     }
+
+    public double distanceTo(TileEntity tileEntity) {
+        // Get the bounding polygon of the TileEntity
+        Polygon tilePolygon = tileEntity.getBoundary();
+
+        // Calculate the center of the TileEntity
+        Rectangle tileBounds = tilePolygon.getBounds();
+        int tileCenterX = tileBounds.x + tileBounds.width / 2;
+        int tileCenterY = tileBounds.y + tileBounds.height / 2;
+
+        // Calculate the distance to the center of the TileEntity
+        double dx = tileCenterX - this.getCenterX();
+        double dy = tileCenterY - this.getCenterY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
 
 
     public void die()

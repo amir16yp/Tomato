@@ -1,4 +1,4 @@
-package game.input;
+package game.registry;
 
 import game.Logger;
 

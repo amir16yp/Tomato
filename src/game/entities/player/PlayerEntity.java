@@ -4,15 +4,16 @@ import game.Direction;
 import game.Game;
 import game.Screen;
 import game.Sprite;
+import game.entities.Door;
 import game.entities.Entity;
 import game.entities.NPC;
 import game.entities.enemy.Zombie;
-import game.input.KeybindRegistry;
+import game.registry.KeybindRegistry;
 import game.items.*;
 import game.ui.DialogueBox;
+import org.w3c.dom.ranges.DocumentRange;
 
 import java.awt.event.KeyEvent;
-import java.util.Random;
 
 public class PlayerEntity extends Entity {
 
@@ -49,13 +50,7 @@ public class PlayerEntity extends Entity {
 
 
     public void updatePosition() {
-        if (isInDialogue) { return ;}
         super.updatePosition();
-        int levelID = currerntTile.doorToLevel;
-        if (levelID >= 0) {
-            Screen.setCurrentScene(Screen.scenes.get(levelID));
-            this.setPosition(Screen.getCurrentScene().getSpawnX(), Screen.getCurrentScene().getSpawnY());
-        }
     }
 
     public void shootGun()
@@ -104,7 +99,13 @@ public class PlayerEntity extends Entity {
                 }
             }
         });
-        //KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_Z, () -> Screen.getCurrentScene().spawnItem(new DoorKey(new Random().nextInt(0, 1)), 50, 50));
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_Z, () ->  {
+            Screen.getCurrentScene().spawnTileEntity(new Door(Screen.scenes.get(1)), 50, 50);
+        });
+
+        KeybindRegistry.registry.registerKeyPressedAction(KeyEvent.VK_C, () -> {
+            System.out.println(getPlayer().distanceTo(Screen.getCurrentScene().tileEntitiesList.getFirst()));
+        });
 
         KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_W, PlayerEntity::stopPlayerMovingWrap);
         KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_S, PlayerEntity::stopPlayerMovingWrap);
@@ -112,7 +113,7 @@ public class PlayerEntity extends Entity {
         KeybindRegistry.registry.registerKeyReleasedAction(KeyEvent.VK_A, PlayerEntity::stopPlayerMovingWrap);
     }
 
-    public static PlayerEntity getPlayer()
+    public static PlayerEntity getPlayer() throws NullPointerException
     {
         return Screen.getCurrentScene().playerEntity;
     }
@@ -139,7 +140,6 @@ public class PlayerEntity extends Entity {
     }
 
     public void move(Direction direction, boolean unPause) {
-        if (isInDialogue) { return;}
         super.move(direction, unPause);
     }
     public void stopPlayerMoving() {

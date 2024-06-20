@@ -1,5 +1,3 @@
 0,sprites/env/dirt.png,1000,false,-1
-1,sprites/env/cobblestone.png,1000,true,-1
-2,sprites/env/door.png,1000,false,1
-3,sprites/env/door.png,1000,false,0
-4,sprites/env/thevoid.png,1000,true,-1
+1,sprites/env/cobblestone.png,1000,true
+2,sprites/env/thevoid.png,1000,true

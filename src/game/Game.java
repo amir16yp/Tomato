@@ -1,5 +1,7 @@
     package game;
 
+    import game.registry.OptionsRegistry;
+
     import javax.swing.*;
     import java.awt.*;
     import java.awt.event.WindowAdapter;
@@ -70,7 +72,9 @@
         }
 
         public static void main(String[] args) {
-            // Load mods before making the game visible
+            int width = OptionsRegistry.registry.getIntOption("WIDTH");
+            int height = OptionsRegistry.registry.getIntOption("HEIGHT");
+            instance.setResolution(width, height);
             ModLoader.loadMods();
             instance.setVisible(true);
         }

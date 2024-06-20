@@ -8,9 +8,9 @@
     import java.util.List;
 
     import game.entities.player.PlayerEntity;
-    import game.input.KeybindRegistry;
+    import game.registry.KeybindRegistry;
     import game.items.Item;
-    import game.items.PickupItem;
+    import game.registry.OptionsRegistry;
     import game.ui.*;
     import game.ui.Menu;
     import game.ui.SplashScreen;
@@ -123,18 +123,22 @@
                             KeybindRegistry.registry.handleKeyHeld(keyCode);
                         }
                     }
-                    if (currentScene.initalized)
+                    if (currentScene != null)
                     {
-                        for (Item item : PlayerEntity.inventory.items)
+                        if (currentScene.initalized)
                         {
-                            if (item != null)
+                            for (Item item : PlayerEntity.inventory.items)
                             {
-                                item.update();
+                                if (item != null)
+                                {
+                                    item.update();
+                                }
                             }
+                            currentScene.update();
                         }
-                        currentScene.update();
                     }
-                }
+                    }
+
                 for (Mod mod : ModLoader.mods) {
                     mod.update();
                 }
@@ -165,7 +169,7 @@
                     currentMenu.draw(g2d); // Draw the start menu
                 }
 
-                if (OptionsMenu.SHOW_STATS) {
+                if (OptionsRegistry.registry.getBooleanOption("SHOW_STATS")) {
                     long totalMemory = runtime.totalMemory();
                     long freeMemory = runtime.freeMemory();
                     long usedMemory = totalMemory - freeMemory;

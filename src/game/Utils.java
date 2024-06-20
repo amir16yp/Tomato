@@ -2,6 +2,8 @@ package game;
 
 import game.entities.player.PlayerEntity;
 
+import java.io.File;
+
 public class Utils
 {
     public static Runtime runtime = Runtime.getRuntime();
@@ -9,6 +11,13 @@ public class Utils
     private static final long MB = KB * KB;
     private static final long GB = MB * KB;
     private static final long TB = GB * KB;
+
+    public static File getCurrentDir()
+    {
+        String jarPath = ModLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        File currentJar = new File(jarPath);
+        return currentJar.getParentFile();
+    }
 
     public static String humanReadableByteCount(long bytes) {
         if (bytes < KB) {

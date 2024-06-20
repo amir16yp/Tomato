@@ -2,13 +2,16 @@ package game.ui;
 
 import game.Game;
 import game.Screen;
+import game.registry.OptionsRegistry;
 
 import java.util.List;
 
+import static game.registry.OptionsRegistry.registry;
+
 public class OptionsMenu extends Menu {
 
-    public static boolean SHOW_FPS = false;
-    public static boolean SHOW_STATS = true;
+    private boolean SHOW_FPS;
+    private boolean SHOW_STATS;
 
     // Define the list of 4:3 resolutions
     private final int[][] resolutions = {
@@ -24,6 +27,14 @@ public class OptionsMenu extends Menu {
 
     public OptionsMenu(int x, int y, int width, int height) {
         super(x, y, width, height);
+        // Load options from registry
+        loadOptions();
+    }
+
+    // Method to load options from registry
+    private void loadOptions() {
+        SHOW_FPS = registry.getBooleanOption("SHOW_FPS");
+        SHOW_STATS = registry.getBooleanOption("SHOW_STATS");
     }
 
     @Override
@@ -39,12 +50,14 @@ public class OptionsMenu extends Menu {
         toggleFps.setOnSelectedAction(() -> {
             SHOW_FPS = !SHOW_FPS;
             toggleFps.setText("Toggle FPS " + SHOW_FPS);
+            registry.setOption("SHOW_FPS", SHOW_FPS); // Update registry
         });
 
         Button toggleStats = new Button(startX, startY + spacing, buttonWidth, buttonHeight, "Toggle Stats " + SHOW_STATS);
         toggleStats.setOnSelectedAction(() -> {
             SHOW_STATS = !SHOW_STATS;
             toggleStats.setText("Toggle Stats " + SHOW_STATS);
+            registry.setOption("SHOW_STATS", SHOW_STATS); // Update registry
         });
 
         Button backButton = new Button(startX, startY + spacing * 2, buttonWidth, buttonHeight, "Back");
@@ -56,6 +69,8 @@ public class OptionsMenu extends Menu {
         switchResolutionButton.setOnSelectedAction(() -> {
             switchResolution();
             switchResolutionButton.setText(Game.WIDTH + "x" + Game.HEIGHT);
+            registry.setOption("WIDTH", Game.WIDTH);
+            registry.setOption("HEIGHT", Game.HEIGHT);
         });
 
         buttons.add(toggleFps);

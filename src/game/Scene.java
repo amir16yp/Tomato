@@ -1,6 +1,7 @@
 package game;
 
 import game.entities.Entity;
+import game.entities.TileEntity;
 import game.entities.player.PlayerEntity;
 import game.entities.player.PlayerInventory;
 import game.items.Item;
@@ -24,6 +25,7 @@ public class Scene {
     public PlayerEntity playerEntity = new PlayerEntity();
     public List<Rectangle> boundaries = new ArrayList<Rectangle>();
     public List<UIElement> uiElements = new ArrayList<>();
+    public List<TileEntity> tileEntitiesList = new ArrayList<>();
     private final String tileIdPath;
     private final String tilePath;
     private final int spawnX;
@@ -60,10 +62,9 @@ public class Scene {
     }
 
     public void setTile(Tile tileToSet, int id, int doorToLevel) {
-        for (Tile tile : currentTiles.tiles) {
+        for (Tile tile : currentTiles.getTiles()) {
             if (tile.row == tileToSet.row && tile.column == tileToSet.column) {
                 tile.ID = id;
-                tile.doorToLevel = doorToLevel;
                 break;
             }
         }
@@ -78,16 +79,24 @@ public class Scene {
     }
 
     public void spawnEntity(Entity entity, int x, int y) {
-        logger.Log(String.format("Spawnining %s at %d,%d", entity.getClass().getName(), x, y));
+        logger.Log(String.format("Spawnining entity %s at %d,%d", entity.getClass().getName(), x, y));
         entity.setPosition(x, y);
         entityList.add(entity);
     }
 
-    public void spawnItem(Item item, int x, int y)
+    public void spawnItem(PickupItem item, int x, int y)
     {
-        PickupItem pickupItem = (PickupItem)item;
-        pickupItem.setCoordinate(x, y);
-        pickupItemList.add(pickupItem);
+        logger.Log(String.format("Spawning item %s at %d,%d", item.getClass().getName(), x, y));
+        item.setCoordinate(x, y);
+        pickupItemList.add(item);
+    }
+
+    public void spawnTileEntity(TileEntity tileEntity, int x, int y)
+    {
+        logger.Log(String.format("Spawning tileEntity %s at %d,%d", tileEntity.getClass().getName(), x, y));
+        tileEntity.setX(x);
+        tileEntity.setY(y);
+        tileEntitiesList.add(tileEntity);
     }
 
     public int[] getRandomCoordsInMap() {
@@ -150,7 +159,7 @@ public class Scene {
         playerEntity.setPosition(spawnX, spawnY);
         //this.entityList.add(playerEntity);
 
-        for (Tile tile : currentTiles.tiles) {
+        for (Tile tile : currentTiles.getTiles()) {
             if (tile.isSolid) {
                 boundaries.add(
                         new Rectangle
@@ -175,6 +184,12 @@ public class Scene {
         for (Entity entity : entityList) {
             entity.update();
         }
+
+        for (TileEntity tileEntity : tileEntitiesList)
+        {
+            tileEntity.update();
+        }
+
         List<PickupItem> itemsToRemove = new ArrayList<>();
         for (PickupItem item : pickupItemList)
         {
@@ -200,6 +215,11 @@ public class Scene {
         // Draw entities (e.g., monsters, player)
         for (Entity entity : entityList) {
             entity.draw(sceneGraphics); // Draw entity
+        }
+
+        for (TileEntity tileEntity : tileEntitiesList)
+        {
+            tileEntity.draw(sceneGraphics);
         }
 
         // Draw pickup items

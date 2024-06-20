@@ -21,12 +21,8 @@ public class ModLoader {
     public static void loadMods() {
         try {
             // Find current JAR's directory
-            String jarPath = ModLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            File currentJar = new File(jarPath);
-            File currentDir = currentJar.getParentFile();
-
             // Append mods directory to current JAR's path
-            File modsDir = new File(currentDir, MODS_FOLDER);
+            File modsDir = new File(Utils.getCurrentDir(), MODS_FOLDER);
 
             if (!modsDir.exists() || !modsDir.isDirectory()) {
                 logger.Log("Mods directory not found.");
