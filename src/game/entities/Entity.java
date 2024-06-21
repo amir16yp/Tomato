@@ -215,10 +215,20 @@ public class Entity {
 
     public void updateMoveSprite() {
         switch (currentDirection) {
-            case Direction.UP -> setCurrentSprite("north");
-            case Direction.DOWN -> setCurrentSprite("south");
-            case Direction.LEFT -> setCurrentSprite("west");
-            case Direction.RIGHT -> setCurrentSprite("east");
+            case UP:
+                setCurrentSprite("north");
+                break;
+            case DOWN:
+                setCurrentSprite("south");
+                break;
+            case LEFT:
+                setCurrentSprite("west");
+                break;
+            case RIGHT:
+                setCurrentSprite("east");
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + currentDirection);
         }
     }
 

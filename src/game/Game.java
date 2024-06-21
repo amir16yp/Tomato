@@ -11,7 +11,7 @@
     public class    Game extends JFrame {
         public static Screen screen = new Screen();
         public static Game instance = new Game();
-            public static final int INTERNAL_WIDTH = 768;
+        public static final int INTERNAL_WIDTH = 768;
         public static final int INTERNAL_HEIGHT = 576;
         public static int WIDTH = INTERNAL_WIDTH;
         public static int HEIGHT = INTERNAL_HEIGHT;
@@ -61,7 +61,6 @@
         @Override
         public void dispose() {
             super.dispose();
-            screen.dispose();
             System.exit(0);
         }
 

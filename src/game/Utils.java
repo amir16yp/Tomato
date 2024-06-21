@@ -12,11 +12,9 @@ public class Utils
     private static final long GB = MB * KB;
     private static final long TB = GB * KB;
 
-    public static File getCurrentDir()
-    {
-        String jarPath = ModLoader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        File currentJar = new File(jarPath);
-        return currentJar.getParentFile();
+    public static File getCurrentDir() {
+        String currentDirPath = System.getProperty("user.dir");
+        return new File(currentDirPath);
     }
 
     public static String humanReadableByteCount(long bytes) {

@@ -43,12 +43,23 @@ public class PlayerEntity extends Entity {
     public void update() {
         super.update();
         switch (getCurrentDirection()) {
-            case Direction.UP -> setCurrentSprite("north");
-            case Direction.DOWN -> setCurrentSprite("south");
-            case Direction.LEFT -> setCurrentSprite("west");
-            case Direction.RIGHT -> setCurrentSprite("east");
+            case UP:
+                setCurrentSprite("north");
+                break;
+            case DOWN:
+                setCurrentSprite("south");
+                break;
+            case LEFT:
+                setCurrentSprite("west");
+                break;
+            case RIGHT:
+                setCurrentSprite("east");
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected direction: " + getCurrentDirection());
         }
     }
+
 
 
     public void updatePosition() {
@@ -89,7 +100,9 @@ public class PlayerEntity extends Entity {
                 getActionDialogue().setMessage("It's a wall.");
             } else {
                 for (Entity entity : Screen.getCurrentScene().entityList) {
-                    if (entity instanceof NPC npc) {
+                    if (entity instanceof NPC)
+                    {
+                        NPC npc = (NPC) entity;
                         double distance = distanceToWrap(entity);
                         if (distance < (npc.distanceToTalk)) {
                             getActionDialogue().setMessage(npc.interaction());

@@ -6,6 +6,7 @@ import game.entities.player.PlayerEntity;
 import game.entities.player.PlayerInventory;
 import game.items.Item;
 import game.items.PickupItem;
+import game.registry.SceneRegistry;
 import game.ui.DialogueBox;
 import game.ui.Hotbar;
 import game.ui.UIElement;
@@ -33,6 +34,7 @@ public class Scene {
     private final int spawnY;
     private ResourceLoader resourceLoader;
     public Lighting lighting;
+    public int sceneId;
     public boolean initalized = false;
     public Scene(String tileIdPath, String tilePath, int playerSpawnX, int playerSpawnY, ResourceLoader resourceLoader)
     {
@@ -169,6 +171,7 @@ public class Scene {
                 );
             }
         }
+        SceneRegistry.registry.update(this);
         initalized = true;
     }
 

@@ -11,10 +11,10 @@ public class Door extends TileEntity {
     private static final Sprite lowerSprite = new Sprite("/game/sprites/doorbottom.png", 16, 16, 1000, Game.defaultResourceLoader);
     private static final Sprite upperSprite = new Sprite("/game/sprites/doortop.png", 16, 16, 1000, Game.defaultResourceLoader);
 
-    public Door(Scene doorTo) {
+    public Door(int sceneId) {
         super(new Sprite[][]{{lowerSprite}, {upperSprite}}, PlayerEntity.class);
         this.action = () -> {
-            Screen.setCurrentScene(doorTo);
+            Screen.setCurrentScene(sceneId);
         };
     }
 }

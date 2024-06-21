@@ -114,16 +114,16 @@ public class MeleeEnemyEntity extends EnemyEntity {
         // Determine the attack sprite based on the current direction
         String attackSprite = null;
         switch (currentDirection) {
-            case Direction.UP:
+            case UP:
                 attackSprite = "attack_north";
                 break;
-            case Direction.DOWN:
+            case DOWN:
                 attackSprite = "attack_south";
                 break;
-            case Direction.LEFT:
+            case LEFT:
                 attackSprite = "attack_west";
                 break;
-            case Direction.RIGHT:
+            case RIGHT:
                 attackSprite = "attack_east";
                 break;
         }
