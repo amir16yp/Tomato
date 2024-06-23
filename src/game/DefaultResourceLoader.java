@@ -1,6 +1,9 @@
 package game;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,5 +28,18 @@ public class DefaultResourceLoader implements ResourceLoader {
             }
         }
         return lines;
+    }
+
+
+    @Override
+    public Clip loadSound(String path) throws IOException  {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResource(path)));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            return clip;
+        } catch (Exception e) {
+            throw new IOException("Failed to load sound: " + path, e);
+        }
     }
 }

@@ -14,10 +14,17 @@ public class KeybindRegistry {
     private final Logger logger = new Logger(this.getClass().getName());
     public static KeybindRegistry registry = new KeybindRegistry(); // Singleton instance
 
+
+    public KeybindRegistry()
+    {
+        logger.Log("Initialized keybind registry");
+    }
+
     public void registerKeyPressedAction(int keyCode, Runnable action) {
         keyPressedActions.computeIfAbsent(keyCode, k -> new ArrayList<>()).add(action);
         logger.Log("Registered key pressed " + keyCode);
     }
+
 
     public void registerKeyReleasedAction(int keyCode, Runnable action) {
         keyReleasedActions.computeIfAbsent(keyCode, k -> new ArrayList<>()).add(action);

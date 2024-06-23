@@ -1,5 +1,6 @@
 package game.registry;
 
+import game.Logger;
 import game.Scene;
 import game.Tile;
 import game.entities.Entity;
@@ -23,9 +24,14 @@ public class SceneRegistry {
 
     private Map<Integer, List<PickupItem>> scenePickupItemMap = new HashMap<>();
     private Map<Integer, List<UIElement>> sceneUiElementMap = new HashMap<>();
+    private final Logger logger = new Logger(this.getClass().getName());
 
+    public SceneRegistry()
+    {
+        logger.Log("Initialized scene registry");
+    }
 
-    public void registerScene(Scene scene) {
+    public int registerScene(Scene scene) {
         scene.sceneId = idCount;
         scenesMap.put(idCount, scene);
         sceneEntityMap.put(idCount, new ArrayList<>());
@@ -33,6 +39,8 @@ public class SceneRegistry {
         sceneUiElementMap.put(idCount, new ArrayList<>()); // Initialize empty list for UIElements
         sceneTileEntityMap.put(idCount, new ArrayList<>());
         idCount++;
+        logger.Log("registered scene ID " + scene.sceneId);
+        return scene.sceneId;
     }
 
     public Scene getScene(int id) {

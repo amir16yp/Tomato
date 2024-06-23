@@ -11,6 +11,7 @@ import game.entities.NPC;
 import game.entities.enemy.Zombie;
 import game.registry.KeybindRegistry;
 import game.items.*;
+import game.registry.SoundRegistry;
 import game.ui.DialogueBox;
 import org.w3c.dom.ranges.DocumentRange;
 
@@ -68,7 +69,8 @@ public class PlayerEntity extends Entity {
 
     public void shootGun()
     {
-        shootProjectile(projectileSprite, 10, 25    );
+        SoundRegistry.registry.playSound("gun1");
+        shootProjectile(projectileSprite, 10, 25);
     }
 
     public static void registerKeybinds() {
