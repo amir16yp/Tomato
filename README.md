@@ -14,6 +14,8 @@ currently i have implemented:
 - keybind registry
 - basic hotbar inventory
 - items
+- lighting system
+- sound registry and playback
 - a modding interface ([see example mod](https://github.com/amir16yp/Tomato-ExampleMod))
 # Compilation
 You can compile the Tomato game engine in two ways:
